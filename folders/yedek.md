@@ -676,4 +676,418 @@ Kod yedeği-|-|
 ---
 
 | V3 |
-.
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İyilik Köprüsü | Akşemseddin İHO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        
+        :root { --blue: #1e3a8a; --gold: #fbbf24; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed; inset: 0; background: var(--blue); z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .scribble-path { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; }
+
+        /* Custom UI */
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .section-page { display: none; }
+        .section-page.active { display: block; animation: fadeInUp 0.6s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .mobile-menu { transform: translateX(100%); transition: transform 0.3s ease; }
+        .mobile-menu.open { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+
+    <!-- AÇILIŞ EKRANI -->
+    <div id="splash-screen">
+        <svg class="w-64 h-32" viewBox="0 0 200 100">
+            <path class="scribble-path" d="M20,50 C40,20 60,80 80,50 C100,20 120,80 140,50 C160,20 180,80 190,50" />
+        </svg>
+        <h1 id="splash-text" class="text-white text-2xl font-black mt-4 uppercase tracking-[0.3em] opacity-0">İyilik Köprüsü</h1>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="glass-nav fixed top-0 w-full z-50 h-20 border-b border-slate-100 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto h-full flex justify-between items-center">
+            <a href="#" onclick="showSection('home')" class="flex items-center gap-3">
+                <div class="bg-blue-900 p-2 rounded-lg text-white"><i data-lucide="bridge"></i></div>
+                <div>
+                    <span class="block font-black text-blue-950 leading-none text-sm md:text-base">İyilik Köprüsü</span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Dijital Vakıf Sistemi</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <ul class="hidden md:flex gap-8 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                <li><button onclick="showSection('home')" class="nav-link hover:text-blue-600 transition">Ana Sayfa</button></li>
+                <li><button onclick="showSection('mission')" class="nav-link hover:text-blue-600 transition">Vakıf Ruhu</button></li>
+                <li><button onclick="showSection('catalog')" class="nav-link hover:text-blue-600 transition">Mağaza</button></li>
+            </ul>
+
+            <div class="flex items-center gap-4">
+                <div id="auth-btns">
+                    <button onclick="openLoginModal()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-blue-100">Giriş Yap</button>
+                </div>
+                <div id="user-info" class="hidden flex items-center gap-3">
+                    <img id="user-avatar" class="w-9 h-9 rounded-full border-2 border-white shadow-sm cursor-pointer" onclick="showSection('profile')">
+                    <button onclick="appLogout()" class="text-slate-300 hover:text-red-500"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+                </div>
+                <button class="md:hidden text-slate-600" onclick="toggleMobileMenu()"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBİL MENÜ -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-white z-[60] p-8 md:hidden">
+        <div class="flex justify-between mb-12">
+            <span class="font-black text-blue-900">MENÜ</span>
+            <button onclick="toggleMobileMenu()"><i data-lucide="x"></i></button>
+        </div>
+        <ul class="flex flex-col gap-6 text-2xl font-black text-slate-800">
+            <li><button onclick="showSection('home'); toggleMobileMenu()">Ana Sayfa</button></li>
+            <li><button onclick="showSection('mission'); toggleMobileMenu()">Vakıf Ruhu</button></li>
+            <li><button onclick="showSection('catalog'); toggleMobileMenu()">Mağaza</button></li>
+            <li><button onclick="showSection('profile'); toggleMobileMenu()">Profilim</button></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <main class="pt-24 pb-12 px-4 md:px-8">
+        
+        <!-- SECTION: HOME -->
+        <section id="sec-home" class="section-page active max-w-7xl mx-auto">
+            <!-- Hero -->
+            <div class="bg-white rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-20 shadow-xl border border-slate-100 overflow-hidden relative mb-12">
+                <div class="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                    <div data-aos="fade-right">
+                        <span class="inline-block px-4 py-1.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-black uppercase mb-6 tracking-widest border border-blue-100">Tübitak 4006 / 2026</span>
+                        <h1 class="serif text-4xl md:text-7xl text-slate-900 leading-[1.1] mb-8">Eski Oyuncağın <br><span class="text-blue-600 italic">Yeni Bir Umut.</span></h1>
+                        <p class="text-slate-500 text-base md:text-lg mb-10 max-w-md leading-relaxed">Akşemseddin'in şifacı ve paylaşımcı ruhunu, modern sosyal girişimcilikle birleştirdik. Atıl oyuncaklar Gazze'ye yardıma dönüşüyor.</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="showSection('catalog')" class="bg-blue-900 text-white px-8 py-5 rounded-2xl font-black flex items-center justify-center gap-3 hover:bg-black transition-all shadow-xl">Hemen Bağışla <i data-lucide="heart"></i></button>
+                            <button onclick="showSection('mission')" class="bg-slate-100 text-slate-700 px-8 py-5 rounded-2xl font-black">Proje Detayları</button>
+                        </div>
+                    </div>
+                    <div class="flex justify-center" data-aos="zoom-in">
+                        <div class="relative">
+                            <div class="bg-white p-4 md:p-8 rounded-[3rem] shadow-2xl border-4 border-slate-50 transform rotate-2">
+                                <img src="photos/qr_code.png" class="w-40 h-40 md:w-64 md:h-64" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=iyilikkoprusu'">
+                            </div>
+                            <div class="absolute -top-6 -right-6 bg-yellow-400 p-4 rounded-2xl shadow-lg animate-bounce hidden md:block">
+                                <i data-lucide="qr-code" class="text-blue-900"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16" data-aos="fade-up">
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <span class="block text-3xl font-black text-blue-600 mb-1">250+</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Bağışlanan Oyuncak</span>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <span class="block text-3xl font-black text-green-600 mb-1">₺12K</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Gazze Fonu</span>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <span class="block text-3xl font-black text-yellow-600 mb-1">15+</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Gönüllü Ekip</span>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 text-center shadow-sm">
+                    <span class="block text-3xl font-black text-red-600 mb-1">100%</span>
+                    <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Şeffaf Bağış</span>
+                </div>
+            </div>
+
+            <!-- Akşemseddin Köşesi -->
+            <div class="grid lg:grid-cols-2 gap-12 items-center mb-20 bg-blue-950 rounded-[3rem] p-8 md:p-16 text-white overflow-hidden relative">
+                <div data-aos="fade-right">
+                    <h2 class="serif text-3xl md:text-5xl mb-6 italic text-yellow-400 underline decoration-blue-500">Akşemseddin’in Mirası</h2>
+                    <p class="text-blue-100/80 leading-relaxed mb-8">Bolu'nun manevi rehberi Akşemseddin Hazretleri'nin "şifa ve yardımlaşma" felsefesi, bugün dijital bir kodla hayat buluyor. Biz sadece oyuncak satmıyoruz; bir vakıf kültürünü yazılımla geleceğe taşıyoruz.</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4 text-sm font-bold"><i data-lucide="check-circle" class="text-yellow-400"></i> Anonim Bağış Protokolü</li>
+                        <li class="flex items-center gap-4 text-sm font-bold"><i data-lucide="check-circle" class="text-yellow-400"></i> İnsan Onurunu Koruyan Ticaret</li>
+                        <li class="flex items-center gap-4 text-sm font-bold"><i data-lucide="check-circle" class="text-yellow-400"></i> Yerelden Küresele İyilik Ağı</li>
+                    </ul>
+                </div>
+                <div class="relative" data-aos="fade-left">
+                    <div class="aspect-video bg-blue-900/50 rounded-3xl flex items-center justify-center border border-blue-800">
+                        <i data-lucide="scroll" class="w-20 h-20 text-blue-700/50"></i>
+                        <span class="absolute bottom-4 text-[10px] uppercase font-black tracking-widest text-blue-400">Dijital Vakıf Senedi Algoritması</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: MISSION (VAKIF RUHU) -->
+        <section id="sec-mission" class="section-page max-w-4xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="serif text-4xl italic mb-4">Proje Anayasası</h2>
+                <p class="text-slate-500">TÜBİTAK 4006 Teknik Uygulama Süreçleri</p>
+            </div>
+            <div class="bg-white p-8 md:p-16 rounded-[3rem] shadow-sm border border-slate-100">
+                <div class="grid gap-12">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 flex-shrink-0"><i data-lucide="recycle"></i></div>
+                        <div>
+                            <h3 class="text-xl font-black mb-2">1. Aşama: Sıfır Atık Geri Kazanım</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Okulumuzda kurulan "İyilik Kumbarası" ile toplanan oyuncaklar, teknik ekibimiz tarafından temizlenir ve barkodlanır.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 flex-shrink-0"><i data-lucide="code"></i></div>
+                        <div>
+                            <h3 class="text-xl font-black mb-2">2. Aşama: Dijital Envanter Yönetimi</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Oyuncaklar bu platforma yüklenir. Firebase Realtime Database ile stoklar anlık olarak yönetilir.</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 flex-shrink-0"><i data-lucide="globe"></i></div>
+                        <div>
+                            <h3 class="text-xl font-black mb-2">3. Aşama: Sosyal Paylaşım Ekonomisi</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Elde edilen gelir, Gazze'deki çocuklar ve yerel yetimler için belirlenen yardım fonuna şeffaf bir şekilde aktarılır.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: CATALOG -->
+        <section id="sec-catalog" class="section-page max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-12">
+                <h2 class="serif text-4xl italic">Oyuncak Mağazası</h2>
+                <span class="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Güncel Stok</span>
+            </div>
+            <div id="catalog-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Ürünler -->
+            </div>
+        </section>
+
+        <!-- SECTION: PROFILE -->
+        <section id="sec-profile" class="section-page max-w-2xl mx-auto">
+            <div id="profile-content" class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100">
+                <div class="flex flex-col items-center mb-12">
+                    <img id="profile-img-large" class="w-32 h-32 rounded-3xl border-4 border-slate-50 shadow-xl mb-6">
+                    <h2 id="profile-name" class="serif text-3xl italic">Bağışçı Profili</h2>
+                    <p id="profile-email" class="text-slate-400">email@adres.com</p>
+                </div>
+                <h3 class="font-black text-xs uppercase tracking-widest mb-6 text-slate-400">Bağış Geçmişim</h3>
+                <div id="user-orders" class="space-y-4">
+                    <!-- Bağışlar -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-100 py-16 text-center">
+        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300">Akşemseddin Hafız İHO | TÜBİTAK 4006</p>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div id="login-box" class="bg-white w-full max-w-md rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+            <button onclick="closeLoginModal()" class="absolute top-6 right-6 text-slate-300 hover:text-red-500"><i data-lucide="x"></i></button>
+            
+            <div id="auth-forms">
+                <div class="text-center mb-8">
+                    <h3 class="serif text-2xl italic mb-2" id="auth-title">Hoş Geldiniz</h3>
+                    <p class="text-slate-400 text-sm">İyilik dünyasına adım atın.</p>
+                </div>
+
+                <!-- Email Login Form -->
+                <div id="email-form" class="space-y-4 mb-6">
+                    <input type="email" id="input-email" placeholder="E-posta Adresiniz" class="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-600 transition text-sm">
+                    <input type="password" id="input-pass" placeholder="Şifreniz" class="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl outline-none focus:border-blue-600 transition text-sm">
+                    <div class="flex gap-2">
+                        <button id="btn-login" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black hover:bg-blue-700 transition shadow-lg shadow-blue-100">Giriş</button>
+                        <button id="btn-register" class="flex-1 bg-slate-100 text-slate-700 py-4 rounded-2xl font-black hover:bg-slate-200 transition">Kayıt Ol</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 mb-6 opacity-20"><hr class="flex-1"><span>veya</span><hr class="flex-1"></div>
+
+                <button id="btn-google" class="w-full bg-white border border-slate-100 py-4 rounded-2xl font-black flex items-center justify-center gap-3 hover:bg-slate-50 transition shadow-sm">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> Google ile Giriş
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        AOS.init({ duration: 800, once: true });
+        lucide.createIcons();
+
+        // SPLASH
+        window.addEventListener('load', () => {
+            const tl = anime.timeline({ easing: 'easeInOutQuart' });
+            tl.add({ targets: '.scribble-path', strokeDashoffset: [anime.setDashoffset, 0], duration: 1500, delay: 500 })
+              .add({ targets: '#splash-text', opacity: [0, 1], translateY: [10, 0], duration: 800, offset: '-=500' })
+              .add({ targets: '#splash-screen', opacity: 0, duration: 800, delay: 1000, complete: () => {
+                document.getElementById('splash-screen').style.display = 'none';
+              }});
+        });
+
+        // NAVIGATION
+        window.showSection = (id) => {
+            document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => AOS.refresh(), 100);
+        };
+
+        window.toggleMobileMenu = () => document.getElementById('mobile-menu').classList.toggle('open');
+
+        // MODAL
+        window.openLoginModal = () => {
+            const m = document.getElementById('login-modal');
+            m.classList.remove('hidden');
+            setTimeout(() => m.classList.add('opacity-100'), 10);
+        };
+        window.closeLoginModal = () => {
+            const m = document.getElementById('login-modal');
+            m.classList.remove('opacity-100');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        };
+    </script>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, 
+                 createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, addDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIG (Replace with your actual keys from conf.md)
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "PROJECT_ID.firebaseapp.com",
+            projectId: "PROJECT_ID",
+            storageBucket: "PROJECT_ID.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+        
+        let app, auth, db, currentUser = null;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch(e) { console.warn("Firebase not configured"); }
+
+        if(auth) {
+            // Google Login
+            document.getElementById('btn-google').onclick = () => {
+                signInWithPopup(auth, new GoogleAuthProvider()).then(() => closeLoginModal());
+            };
+
+            // Email Login
+            document.getElementById('btn-login').onclick = () => {
+                const e = document.getElementById('input-email').value;
+                const p = document.getElementById('input-pass').value;
+                signInWithEmailAndPassword(auth, e, p).then(() => closeLoginModal()).catch(err => alert("Giriş Hatası: " + err.message));
+            };
+
+            // Email Register
+            document.getElementById('btn-register').onclick = () => {
+                const e = document.getElementById('input-email').value;
+                const p = document.getElementById('input-pass').value;
+                createUserWithEmailAndPassword(auth, e, p).then(() => closeLoginModal()).catch(err => alert("Kayıt Hatası: " + err.message));
+            };
+
+            window.appLogout = () => signOut(auth);
+
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                const logged = !!user;
+                document.getElementById('auth-btns').classList.toggle('hidden', logged);
+                document.getElementById('user-info').classList.toggle('hidden', !logged);
+                
+                if(logged) {
+                    const avatar = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=1e3a8a&color=fff`;
+                    document.getElementById('user-avatar').src = avatar;
+                    document.getElementById('profile-img-large').src = avatar;
+                    document.getElementById('profile-email').innerText = user.email;
+                    document.getElementById('profile-name').innerText = user.displayName || user.email.split('@')[0];
+
+                    // Bağış Geçmişi
+                    onSnapshot(query(collection(db, "orders"), where("userId", "==", user.uid)), (snap) => {
+                        const list = document.getElementById('user-orders');
+                        if(snap.empty) {
+                            list.innerHTML = `<p class="text-slate-300 italic text-center py-8 text-sm">Henüz bir bağış kaydınız yok.</p>`;
+                            return;
+                        }
+                        list.innerHTML = snap.docs.map(doc => {
+                            const d = doc.data();
+                            return `
+                                <div class="p-5 bg-slate-50 rounded-2xl flex justify-between items-center border border-slate-100">
+                                    <span class="font-bold text-slate-700">${d.productName}</span>
+                                    <span class="text-blue-600 font-black">₺${d.price}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    });
+                }
+            });
+
+            // Katalog
+            onSnapshot(collection(db, "products"), (snap) => {
+                const grid = document.getElementById('catalog-grid');
+                if(snap.empty) {
+                    grid.innerHTML = `<p class="col-span-full py-20 text-center text-slate-400 italic">Ürünler depodan yükleniyor...</p>`;
+                    return;
+                }
+                grid.innerHTML = snap.docs.map((doc, i) => {
+                    const p = doc.data();
+                    return `
+                        <div class="bg-white p-5 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-2xl transition-all group" data-aos="fade-up" data-aos-delay="${i*50}">
+                            <div class="h-44 bg-slate-100 rounded-[2rem] mb-4 overflow-hidden relative">
+                                <img src="${p.imageUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/300?text=Oyuncak'">
+                            </div>
+                            <h4 class="font-black text-slate-800 mb-4 px-2 truncate">${p.name}</h4>
+                            <div class="flex justify-between items-center px-2">
+                                <span class="text-xl font-black text-blue-600">₺${p.price}</span>
+                                <button onclick="orderProduct('${p.name}', ${p.price})" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all">Bağışla</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                setTimeout(() => { lucide.createIcons(); AOS.refresh(); }, 200);
+            });
+
+            window.orderProduct = async (name, price) => {
+                if(!currentUser) { openLoginModal(); return; }
+                if(confirm(`"${name}" oyuncağını bağışlamayı onaylıyor musunuz?`)) {
+                    await addDoc(collection(db, "orders"), {
+                        userId: currentUser.uid,
+                        productName: name,
+                        price: price,
+                        createdAt: new Date()
+                    });
+                    showSection('profile');
+                }
+            };
+        }
+    </script>
+</body>
+</html>
+
