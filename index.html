@@ -16,7 +16,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
 
-        /* Minimalist Splash Screen */
+        /* Splash Screen */
         #splash-screen {
             position: fixed; inset: 0; background: #ffffff; z-index: 10000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -33,74 +33,52 @@
         .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .mobile-menu.open { transform: translateX(0); }
 
-        /* Minimalist Modal Animation */
-        #login-modal { 
-            opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
+        #login-modal { opacity: 0; pointer-events: none; transition: all 0.4s ease; }
         #login-modal.active { opacity: 1; pointer-events: auto; }
-        #login-box { transform: translateY(30px); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        #login-modal.active #login-box { transform: translateY(0); }
-
+        
         .btn-hover { transition: all 0.3s ease; }
         .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4); }
-        
-        .logo-img { width: 44px; height: 44px; object-fit: contain; }
 
-        /* Search Input Styling */
-        .search-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-        }
+        /* Search Input */
+        .search-container { position: relative; width: 100%; max-width: 400px; }
         .search-input {
-            width: 100%;
-            padding: 12px 20px 12px 48px;
-            background: #ffffff;
-            border: 1px solid #f1f5f9;
-            border-radius: 100px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            width: 100%; padding: 12px 20px 12px 48px; background: #ffffff;
+            border: 1px solid #f1f5f9; border-radius: 100px; font-size: 14px; outline: none;
+            transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
         }
-        .search-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 10px 15px -3px rgb(37 99 235 / 0.1);
-        }
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            pointer-events: none;
-        }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgb(37 99 235 / 0.1); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
     </style>
 </head>
 <body class="bg-[#fcfcfd] text-slate-900">
 
-    <!-- MİNİMALİST AÇILIŞ EKRANI -->
+    <!-- SPLASH SCREEN -->
     <div id="splash-screen">
-        <div id="splash-logo" class="opacity-0 scale-90">
-            <img src="pictures/ap_iyilikkoprusu_logo.png" alt="İyilik Köprüsü Logo" class="w-32 h-32 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'">
+        <div id="splash-logo" class="opacity-0 scale-90 text-center">
+            <!-- Güncellenen Açılış Logosu -->
+            <img src="pictures/ap_iyilikkoprusu_logo.png" 
+                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'" 
+                 alt="İyilik Köprüsü Splash Logo" 
+                 class="w-32 h-32 mx-auto mb-4 object-contain">
+            <h2 class="serif text-2xl font-bold italic">İyilik Köprüsü</h2>
         </div>
         <div class="progress-container opacity-0" id="splash-loader">
             <div class="progress-bar" id="load-bar"></div>
         </div>
-        <span class="text-[11px] font-bold tracking-[0.5em] uppercase text-slate-400 mt-6 opacity-0" id="splash-text">İyilik Köprüsü</span>
     </div>
 
-    <!-- NAVBAR -->
+    <!-- NAVIGASYON -->
     <nav class="glass-nav fixed top-0 w-full z-50 h-16 border-b border-slate-100 px-6">
         <div class="max-w-7xl mx-auto h-full flex justify-between items-center">
-            <button onclick="showSection('home')" class="flex items-center gap-3 group">
-                <div class="transition-transform group-hover:scale-105">
-                    <img src="pictures/ap_iyilikkoprusu_logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'">
-                </div>
+            <button onclick="showSection('home')" class="flex items-center gap-3">
+                <!-- Güncellenen Site İçi Logosu -->
+                <img src="pictures/iyilikkoprusu_logo.png" 
+                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'" 
+                     class="w-10 h-10 object-contain" 
+                     alt="Logo">
                 <span class="font-extrabold text-slate-900 tracking-tight text-lg">İyilik Köprüsü</span>
             </button>
 
-            <!-- Desktop Nav -->
             <ul class="hidden md:flex gap-10 text-[11px] font-bold uppercase tracking-widest text-slate-400">
                 <li><button onclick="showSection('home')" class="hover:text-blue-600 transition">Ana Sayfa</button></li>
                 <li><button onclick="showSection('mission')" class="hover:text-blue-600 transition">Vakıf Ruhu</button></li>
@@ -109,229 +87,78 @@
 
             <div class="flex items-center gap-4">
                 <div id="auth-section">
-                    <button onclick="openLoginModal()" class="text-xs font-bold bg-slate-900 text-white px-5 py-2 rounded-full btn-hover">Giriş</button>
+                    <button onclick="openLoginModal()" class="text-xs font-bold bg-slate-900 text-white px-5 py-2 rounded-full btn-hover">Giriş Yap</button>
                 </div>
                 <div id="user-display" class="hidden flex items-center gap-3">
-                    <div class="text-right hidden sm:block">
-                        <p id="user-name" class="text-[10px] font-black uppercase text-slate-900"></p>
-                    </div>
                     <img id="user-img" class="w-8 h-8 rounded-full border border-slate-200 cursor-pointer" onclick="showSection('profile')">
                 </div>
-                <button class="md:hidden p-2" onclick="toggleMobileMenu()"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                <button class="md:hidden" onclick="toggleMobileMenu()"><i data-lucide="menu"></i></button>
             </div>
         </div>
     </nav>
 
-    <!-- MOBİL MENÜ -->
-    <div id="mobile-nav" class="mobile-menu fixed inset-0 bg-white z-[60] flex flex-col p-10 md:hidden">
-        <div class="flex justify-between items-center mb-16">
-            <span class="font-black tracking-tighter text-xl">Menü</span>
-            <button onclick="toggleMobileMenu()"><i data-lucide="x" class="w-6 h-6"></i></button>
-        </div>
-        <div class="flex flex-col gap-8 text-3xl font-bold tracking-tighter">
-            <button onclick="showSection('home'); toggleMobileMenu()" class="text-left hover:text-blue-600">Ana Sayfa</button>
-            <button onclick="showSection('mission'); toggleMobileMenu()" class="text-left hover:text-blue-600">Vakıf Ruhu</button>
-            <button onclick="showSection('catalog'); toggleMobileMenu()" class="text-left hover:text-blue-600">Mağaza</button>
-            <button onclick="showSection('profile'); toggleMobileMenu()" class="text-left hover:text-blue-600">Profilim</button>
-        </div>
-    </div>
-
-    <!-- MAIN CONTENT -->
     <main class="pt-24 pb-20 px-6 max-w-7xl mx-auto">
-        
-        <!-- SECTION: ANA SAYFA -->
+        <!-- ANA SAYFA -->
         <section id="sec-home" class="section-page active">
-            <!-- Hero Section -->
-            <div class="relative rounded-[2.5rem] bg-white border border-slate-100 shadow-sm overflow-hidden mb-12" data-aos="fade-up">
-                <div class="p-8 md:p-24 grid lg:grid-cols-2 gap-16 items-center relative z-10">
-                    <div>
-                        <div class="flex items-center gap-2 mb-8">
-                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">TÜBİTAK 4006 Projesi</span>
-                        </div>
-                        <h1 class="serif text-5xl md:text-8xl text-slate-900 leading-[0.9] mb-8">Eski Oyuncak, <br><span class="italic text-slate-400">Yeni Bir Hikaye.</span></h1>
-                        <p class="text-slate-500 text-lg mb-10 max-w-md leading-relaxed">Akşemseddin'in yardımlaşma geleneğini teknolojiyle harmanladık. Atıl oyuncakları çocukların geleceği için bir iyilik ekonomisine dönüştürüyoruz.</p>
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <button onclick="showSection('catalog')" class="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold btn-hover flex items-center justify-center gap-3">Kataloğu İncele <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                            <button onclick="showSection('mission')" class="bg-slate-50 text-slate-600 px-10 py-5 rounded-2xl font-bold hover:bg-slate-100 transition">Detaylı Bilgi</button>
-                        </div>
-                    </div>
-                    <div class="flex justify-center relative">
-                        <div class="relative bg-white p-6 rounded-[3rem] shadow-2xl border border-slate-50 rotate-3 hover:rotate-0 transition-transform duration-700">
-                            <img src="photos/qr_code.png" class="w-48 h-48 md:w-64 md:h-64 rounded-2xl" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=iyilikkoprusu'">
-                            <div class="mt-6 text-center">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Dijital Vakıf Senedi</p>
-                            </div>
-                        </div>
-                        <div class="absolute -z-10 -top-10 -right-10 w-40 h-40 bg-blue-50 rounded-full blur-3xl"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bilimsel Künye -->
-            <div class="grid md:grid-cols-3 gap-8 mb-20" data-aos="fade-up">
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
-                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-6"><i data-lucide="leaf"></i></div>
-                    <h3 class="font-black text-xl mb-3 text-slate-900">Döngüsel Ekonomi</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">"Sıfır Atık" prensibiyle çalışıyoruz. Kullanılmış ama sağlam oyuncakları ekonomiye kazandırarak çevresel ayak izimizi azaltıyoruz.</p>
-                </div>
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6"><i data-lucide="shield-check"></i></div>
-                    <h3 class="font-black text-xl mb-3 text-slate-900">Vakıf Senedi</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Sistemimiz Akşemseddin'in yardımlaşma felsefesiyle kodlandı. Tüm süreç anonim, şeffaf ve insan onurunu koruyan bir yapıda işler.</p>
-                </div>
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100">
-                    <div class="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-6"><i data-lucide="heart"></i></div>
-                    <h3 class="font-black text-xl mb-3 text-slate-900">Küresel Etki</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Elde edilen her kuruş Gazze'deki çocuklar ve ülkemizdeki yetim kardeşlerimizin gıda, eğitim ve sağlık masrafları için fona aktarılır.</p>
+            <div class="relative rounded-[2.5rem] bg-white border border-slate-100 p-12 md:p-24 text-center overflow-hidden" data-aos="fade-up">
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-6 block">TÜBİTAK 4006 Tasarım Projesi</span>
+                <h1 class="serif text-5xl md:text-7xl mb-8">Eski Oyuncaklar,<br><span class="italic text-slate-400">Yeni Umutlar.</span></h1>
+                <p class="text-slate-500 max-w-xl mx-auto mb-10 text-lg">Akşemseddin'in yardımlaşma geleneğini teknolojiyle harmanladık. Atıl oyuncakları çocuklar için bir iyilik ekonomisine dönüştürüyoruz.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="showSection('catalog')" class="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold btn-hover">Kataloğa Göz At</button>
+                    <button onclick="showSection('mission')" class="bg-slate-50 text-slate-600 px-10 py-5 rounded-2xl font-bold hover:bg-slate-100 transition">Proje Hakkında</button>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION: VAKIF RUHU -->
-        <section id="sec-mission" class="section-page max-w-4xl mx-auto">
-            <div class="text-center mb-20">
-                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4 block">Felsefemiz</span>
-                <h2 class="serif text-4xl md:text-6xl italic">Geçmişin Ruhu, <br>Geleceğin Teknolojisi</h2>
-            </div>
-            <div class="space-y-6">
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row gap-10 items-center shadow-sm">
-                    <div class="w-full md:w-1/3 aspect-square bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-200">
-                        <i data-lucide="scroll-text" class="w-20 h-20"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="font-black text-2xl mb-4">Dijital Vakıf Senedi Nedir?</h3>
-                        <p class="text-slate-500 leading-relaxed text-sm">Vakıf senedi, sistemimizin "Anayasası"dır. Bu dijital algoritma; bağışlanan oyuncağın nasıl seçileceğini, fiyatlandırılacağını ve gelirin nasıl adil dağıtılacağını belirleyen etik kurallar bütünüdür.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-slate-900 text-white p-10 rounded-[2.5rem]">
-                        <h4 class="text-blue-400 font-black uppercase text-[10px] tracking-widest mb-6">Akademik Künye</h4>
-                        <div class="space-y-4">
-                            <div class="flex justify-between border-b border-white/10 pb-2 text-xs">
-                                <span class="text-slate-400">Tematik Alan</span>
-                                <span class="font-bold">Değerler Eğitimi</span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/10 pb-2 text-xs">
-                                <span class="text-slate-400">Yazılım Dili</span>
-                                <span class="font-bold">Web 2.0 / Firebase</span>
-                            </div>
-                            <div class="flex justify-between border-b border-white/10 pb-2 text-xs">
-                                <span class="text-slate-400">Model</span>
-                                <span class="font-bold">Sosyal Girişimcilik</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-blue-600 text-white p-10 rounded-[2.5rem]">
-                        <h4 class="text-blue-100 font-black uppercase text-[10px] tracking-widest mb-6">Hedef Kitle</h4>
-                        <p class="text-2xl font-bold leading-tight italic serif">"Yetimler, Gazze ve İyilikte Buluşmak İsteyen Herkes."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION: KATALOG -->
+        <!-- KATALOG -->
         <section id="sec-catalog" class="section-page">
             <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-8">
-                <div>
-                    <h2 class="serif text-4xl md:text-5xl italic">İyilik Mağazası</h2>
-                    <p class="text-slate-400 mt-2">Aradığınız oyuncağı ismine göre bulun.</p>
-                </div>
-                
-                <!-- Arama Kutusu -->
+                <h2 class="serif text-4xl italic">İyilik Mağazası</h2>
                 <div class="search-container">
                     <i data-lucide="search" class="search-icon w-5 h-5"></i>
                     <input type="text" id="product-search" placeholder="Oyuncak ara..." class="search-input">
                 </div>
             </div>
-            
             <div id="catalog-container" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Ürünler Firebase'den gelecek -->
+                <div class="col-span-full py-20 text-center text-slate-400 italic">Ürünler yükleniyor veya yetki bekleniyor...</div>
             </div>
         </section>
 
-        <!-- SECTION: PROFİL -->
+        <!-- PROFİL -->
         <section id="sec-profile" class="section-page max-w-2xl mx-auto">
             <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm text-center">
-                <img id="profile-pic" class="w-32 h-32 rounded-full border-4 border-slate-50 shadow-lg mx-auto mb-8">
-                <h2 id="profile-user" class="serif text-3xl italic mb-2">İsim Soyisim</h2>
-                <p id="profile-mail" class="text-slate-400 text-sm mb-12 tracking-wide">email@example.com</p>
+                <img id="profile-pic" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-slate-50">
+                <h2 id="profile-user" class="serif text-3xl italic mb-2">Yükleniyor...</h2>
+                <button onclick="handleLogout()" class="text-red-500 text-[10px] font-bold uppercase tracking-widest mt-4">Çıkış Yap</button>
                 
-                <div class="text-left">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 mb-6 border-b pb-2">Bağış Geçmişim</h3>
-                    <div id="order-list" class="space-y-4">
-                        <!-- Siparişler -->
-                    </div>
+                <div class="mt-12 text-left">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-300 border-b pb-2 mb-6">Bağış Geçmişim</h3>
+                    <div id="order-list" class="space-y-4"></div>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- AUTH MODAL -->
-    <div id="login-modal" class="fixed inset-0 bg-slate-950/20 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-        <div id="login-box" class="bg-white w-full max-w-[400px] rounded-[3rem] p-10 shadow-2xl relative">
-            <button onclick="closeLoginModal()" class="absolute top-8 right-8 text-slate-300 hover:text-red-500"><i data-lucide="x"></i></button>
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-[400px] rounded-[2.5rem] p-10 shadow-2xl relative">
+            <button onclick="closeLoginModal()" class="absolute top-6 right-6 text-slate-300"><i data-lucide="x"></i></button>
             <div class="text-center mb-10">
-                <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <img src="pictures/ap_iyilikkoprusu_logo.png" alt="Logo" class="w-14 h-14 object-contain">
-                </div>
                 <h3 class="serif text-2xl italic">Köprüye Giriş</h3>
-                <p class="text-slate-400 text-xs mt-2">İyilik verilerinizi senkronize edin.</p>
+                <p class="text-slate-400 text-xs mt-2">Lütfen veritabanına erişmek için giriş yapın.</p>
             </div>
-            <div class="space-y-4 mb-8">
-                <input type="email" id="email" placeholder="E-posta" class="w-full bg-slate-50 border-none p-4 rounded-2xl outline-none focus:ring-2 ring-blue-100 transition text-sm">
-                <input type="password" id="pass" placeholder="Şifre" class="w-full bg-slate-50 border-none p-4 rounded-2xl outline-none focus:ring-2 ring-blue-100 transition text-sm">
-                <div class="flex gap-2">
-                    <button id="do-login" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl font-bold text-xs hover:bg-black transition shadow-lg shadow-slate-200">GİRİŞ</button>
-                    <button id="do-reg" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold text-xs hover:bg-slate-200 transition">KAYIT</button>
-                </div>
-            </div>
-            <div class="flex items-center gap-4 mb-8 opacity-20"><hr class="flex-1"><span>veya</span><hr class="flex-1"></div>
             <button id="google-login" class="w-full border border-slate-100 py-4 rounded-2xl font-bold text-xs flex items-center justify-center gap-3 hover:bg-slate-50 transition">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-4 h-4"> Google ile Devam Et
             </button>
+            <p class="text-center text-[10px] text-slate-300 mt-6 leading-relaxed">Not: Verileri görmek için "Firestore Rules" kısmında okuma izni verilmiş olmalıdır.</p>
         </div>
     </div>
 
-    <footer class="py-20 text-center opacity-30 grayscale pointer-events-none">
-        <p class="text-[9px] font-black uppercase tracking-[0.6em]">Akşemseddin Hafız İHO | 2026</p>
-    </footer>
-
-    <script>
-        AOS.init({ duration: 1000, once: true });
-        lucide.createIcons();
-
-        // SPLASH SCREEN LOGIC
-        window.addEventListener('load', () => {
-            const tl = anime.timeline({ easing: 'easeOutQuint' });
-            tl.add({ targets: '#splash-logo', opacity: [0, 1], scale: [0.8, 1], duration: 1000 })
-              .add({ targets: '#splash-loader', opacity: [0, 1], duration: 400, offset: '-=600' })
-              .add({ targets: '#load-bar', width: '100%', duration: 1800 })
-              .add({ targets: '#splash-text', opacity: [0, 1], translateY: [15, 0], duration: 800, offset: '-=1200' })
-              .add({ targets: '#splash-screen', opacity: 0, duration: 800, delay: 200, complete: () => {
-                  document.getElementById('splash-screen').style.display = 'none';
-              }});
-        });
-
-        // NAVIGATION
-        window.showSection = (id) => {
-            document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
-            document.getElementById('sec-' + id).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => AOS.refresh(), 100);
-        };
-
-        window.toggleMobileMenu = () => document.getElementById('mobile-nav').classList.toggle('open');
-        window.openLoginModal = () => document.getElementById('login-modal').classList.add('active');
-        window.closeLoginModal = () => document.getElementById('login-modal').classList.remove('active');
-    </script>
-
-    <!-- FIREBASE MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, 
-                 signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, addDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, where, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsFxrU2nEG6pXScBFyARF62GjwLlI_YJI",
@@ -339,159 +166,117 @@
             projectId: "iyilikkoprusu-51686",
             storageBucket: "iyilikkoprusu-51686.firebasestorage.app",
             messagingSenderId: "247908360681",
-            appId: "1:247908360681:web:0ac7677e85dea46b77ab78",
-            measurementId: "G-G2RT5GWYSK"
+            appId: "1:247908360681:web:0ac7677e85dea46b77ab78"
         };
-        
-        let app, auth, db, userRef = null;
-        let allProducts = [];
 
-        // Firebase Başlatma
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-        } catch(e) { console.error("Firebase başlatma hatası:", e); }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+        let unsubscribeProducts = null;
+        let unsubscribeOrders = null;
 
-        if(auth && db) {
-            // Firestore Dinleyicilerini sadece giriş yapıldıktan sonra başlatmak güvenlidir
-            const initFirestoreListeners = (u) => {
-                if (!u) return;
+        window.showSection = (id) => {
+            document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            if(window.AOS) AOS.refresh();
+        };
+        window.openLoginModal = () => document.getElementById('login-modal').classList.add('active');
+        window.closeLoginModal = () => document.getElementById('login-modal').classList.remove('active');
 
-                // Sipariş geçmişini dinle
-                onSnapshot(query(collection(db, "orders"), where("userId", "==", u.uid)), (snap) => {
-                    const list = document.getElementById('order-list');
-                    if(snap.empty) {
-                        list.innerHTML = `<p class="text-slate-300 italic text-[11px] py-10 text-center">Henüz bir iyilik kaydı bulunamadı.</p>`;
-                        return;
-                    }
-                    list.innerHTML = snap.docs.map(doc => {
-                        const d = doc.data();
-                        return `
-                            <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <span class="text-xs font-bold text-slate-700">${d.productName || 'İsimsiz Ürün'}</span>
-                                <span class="text-xs font-black text-blue-600">₺${d.price || 0}</span>
-                            </div>
-                        `;
-                    }).join('');
-                }, (error) => {
-                    console.error("Siparişler dinlenirken hata oluştu:", error);
-                });
-            };
+        const startListeners = (user) => {
+            if (unsubscribeProducts) unsubscribeProducts();
+            if (unsubscribeOrders) unsubscribeOrders();
 
-            // Genel Ürün Kataloğu Dinleyicisi
-            onSnapshot(collection(db, "products"), (snap) => {
-                allProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderProducts(allProducts);
+            unsubscribeProducts = onSnapshot(collection(db, "products"), (snap) => {
+                const products = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts(products);
             }, (error) => {
-                console.error("Ürünler dinlenirken hata oluştu (Yetki sorunu olabilir):", error);
-                const grid = document.getElementById('catalog-container');
-                grid.innerHTML = `<div class="col-span-full p-10 bg-red-50 text-red-600 rounded-2xl text-center text-xs font-bold">
-                    Veri erişim yetkisi reddedildi. Lütfen Firebase Console -> Firestore -> Rules kısmından okuma izni verin.
-                </div>`;
+                console.error("Hata:", error);
+                document.getElementById('catalog-container').innerHTML = `<div class="col-span-full p-10 bg-red-50 text-red-600 rounded-3xl text-center text-xs font-bold">Veri erişim yetkisi hatası.</div>`;
             });
 
-            // AUTH DURUMU
-            onAuthStateChanged(auth, (u) => {
-                userRef = u;
-                document.getElementById('auth-section').classList.toggle('hidden', !!u);
-                document.getElementById('user-display').classList.toggle('hidden', !u);
-                
-                if(u) {
-                    const pic = u.photoURL || `https://ui-avatars.com/api/?name=${u.email || 'User'}&background=0f172a&color=fff`;
-                    document.getElementById('user-img').src = pic;
-                    document.getElementById('user-name').innerText = u.displayName || (u.email ? u.email.split('@')[0] : "Misafir");
-                    document.getElementById('profile-pic').src = pic;
-                    document.getElementById('profile-user').innerText = u.displayName || (u.email ? u.email.split('@')[0] : "Misafir");
-                    document.getElementById('profile-mail').innerText = u.email || "Anonim Oturum";
-                    initFirestoreListeners(u);
-                } else {
-                    // Eğer kullanıcı giriş yapmamışsa, verileri görmek için anonim giriş yapabiliriz (opsiyonel)
-                    // signInAnonymously(auth); 
-                }
-            });
-
-            // Ürün Render
-            const renderProducts = (products) => {
-                const grid = document.getElementById('catalog-container');
-                if(!grid) return;
-                
-                if(products.length === 0) {
-                    grid.innerHTML = `<p class="col-span-full py-20 text-center text-slate-300 italic text-sm">Ürün bulunamadı...</p>`;
+            unsubscribeOrders = onSnapshot(query(collection(db, "orders"), where("userId", "==", user.uid)), (snap) => {
+                const list = document.getElementById('order-list');
+                if(snap.empty) {
+                    list.innerHTML = `<p class="text-slate-300 text-xs text-center py-6">Henüz bağışınız bulunmuyor.</p>`;
                     return;
                 }
-                grid.innerHTML = products.map((p, i) => `
-                    <div class="bg-white p-5 rounded-[2.5rem] border border-slate-100 group hover:shadow-2xl transition-all" data-aos="fade-up" data-aos-delay="${i*20}">
-                        <div class="aspect-square bg-slate-50 rounded-[2rem] mb-6 overflow-hidden">
-                            <img src="${p.imageUrl || 'https://via.placeholder.com/300'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        </div>
-                        <h4 class="font-bold text-slate-800 mb-4 px-2 truncate">${p.name || 'Yeni Oyuncak'}</h4>
-                        <div class="flex justify-between items-center px-2">
-                            <span class="text-xl font-black text-slate-900">₺${p.price || 0}</span>
-                            <button onclick="orderItem('${p.name}', ${p.price})" class="bg-slate-950 text-white px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-colors">Bağışla</button>
-                        </div>
+                list.innerHTML = snap.docs.map(doc => `
+                    <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-700">${doc.data().productName}</span>
+                        <span class="text-xs font-black text-blue-600">₺${doc.data().price}</span>
                     </div>
                 `).join('');
-                if (window.lucide) lucide.createIcons();
-            };
-
-            // Arama İşlemi
-            document.getElementById('product-search')?.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = allProducts.filter(p => (p.name || "").toLowerCase().includes(term));
-                renderProducts(filtered);
             });
+        };
 
-            // Bağış (Sipariş) Fonksiyonu
-            window.orderItem = async (name, price) => {
-                if(!userRef) { openLoginModal(); return; }
-                
-                const modalHtml = `<div id="confirm-box" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div class="bg-white rounded-[2rem] p-8 max-w-sm w-full text-center">
-                        <h3 class="serif text-xl mb-4 italic">Bağış Onayı</h3>
-                        <p class="text-slate-500 text-sm mb-8">"${name}" ürününü bağışlayarak fona destek olmak istiyor musunuz?</p>
-                        <div class="flex gap-4">
-                            <button id="confirm-yes" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold text-xs">EVET</button>
-                            <button id="confirm-no" class="flex-1 bg-slate-100 text-slate-600 py-3 rounded-xl font-bold text-xs">İPTAL</button>
-                        </div>
+        const renderProducts = (products) => {
+            const grid = document.getElementById('catalog-container');
+            if (products.length === 0) {
+                grid.innerHTML = `<p class="col-span-full py-10 text-center text-slate-300 italic">Henüz ürün eklenmemiş.</p>`;
+                return;
+            }
+            grid.innerHTML = products.map(p => `
+                <div class="bg-white p-5 rounded-[2.5rem] border border-slate-100 group">
+                    <div class="aspect-square bg-slate-50 rounded-[2rem] mb-6 overflow-hidden">
+                        <img src="${p.imageUrl || 'https://via.placeholder.com/300'}" class="w-full h-full object-cover">
                     </div>
-                </div>`;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                
-                document.getElementById('confirm-no').onclick = () => document.getElementById('confirm-box').remove();
-                document.getElementById('confirm-yes').onclick = async () => {
-                    try {
-                        await addDoc(collection(db, "orders"), {
-                            userId: userRef.uid,
-                            productName: name,
-                            price: price,
-                            createdAt: serverTimestamp()
-                        });
-                        document.getElementById('confirm-box').remove();
-                        showSection('profile');
-                    } catch (e) {
-                        alert("Bağış yapılırken bir hata oluştu: " + e.message);
-                    }
-                };
-            };
+                    <h4 class="font-bold mb-4 px-2 truncate">${p.name || 'İsimsiz Oyuncak'}</h4>
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-xl font-black">₺${p.price || 0}</span>
+                        <button onclick="orderItem('${p.name}', ${p.price})" class="bg-slate-950 text-white px-5 py-2 rounded-xl text-[10px] font-bold uppercase">Bağışla</button>
+                    </div>
+                </div>
+            `).join('');
+        };
 
-            // Auth İşlemleri
-            document.getElementById('google-login').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).then(() => closeLoginModal()).catch(err => console.error(err));
+        window.orderItem = async (name, price) => {
+            if(!currentUser) { openLoginModal(); return; }
+            if(confirm(`"${name}" ürününü bağışlayarak fona destek olmak istiyor musunuz?`)) {
+                try {
+                    await addDoc(collection(db, "orders"), {
+                        userId: currentUser.uid,
+                        productName: name,
+                        price: price,
+                        createdAt: serverTimestamp()
+                    });
+                    showSection('profile');
+                } catch(e) { alert("Hata: " + e.message); }
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            document.getElementById('auth-section').classList.toggle('hidden', !!user);
+            document.getElementById('user-display').classList.toggle('hidden', !user);
             
-            document.getElementById('do-login').onclick = () => {
-                const e = document.getElementById('email').value;
-                const p = document.getElementById('pass').value;
-                if(!e || !p) return alert("Lütfen alanları doldurun.");
-                signInWithEmailAndPassword(auth, e, p).then(() => closeLoginModal()).catch((err) => alert("Giriş hatası: " + err.message));
-            };
-            
-            document.getElementById('do-reg').onclick = () => {
-                const e = document.getElementById('email').value;
-                const p = document.getElementById('pass').value;
-                if(!e || !p) return alert("Lütfen alanları doldurun.");
-                createUserWithEmailAndPassword(auth, e, p).then(() => closeLoginModal()).catch((err) => alert("Kayıt hatası: " + err.message));
-            };
-        }
+            if (user) {
+                const pic = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=random`;
+                document.getElementById('user-img').src = pic;
+                document.getElementById('profile-pic').src = pic;
+                document.getElementById('profile-user').innerText = user.displayName || user.email;
+                startListeners(user);
+            }
+        });
+
+        document.getElementById('google-login').onclick = () => {
+            signInWithPopup(auth, new GoogleAuthProvider()).then(() => closeLoginModal());
+        };
+
+        window.handleLogout = () => signOut(auth);
+
+        window.addEventListener('load', () => {
+            const tl = anime.timeline({ easing: 'easeOutQuint' });
+            tl.add({ targets: '#splash-logo', opacity: [0, 1], scale: [0.8, 1], duration: 800 })
+              .add({ targets: '#splash-loader', opacity: [0, 1], duration: 400, offset: '-=400' })
+              .add({ targets: '#load-bar', width: '100%', duration: 1200 })
+              .add({ targets: '#splash-screen', opacity: 0, duration: 600, complete: () => {
+                  document.getElementById('splash-screen').style.display = 'none';
+                  AOS.init();
+                  lucide.createIcons();
+              }});
+        });
     </script>
 </body>
 </html>
