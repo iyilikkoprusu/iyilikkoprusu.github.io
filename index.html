@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İyilik Köprüsü | Akşemseddin İHO</title>
+    <!-- Favicon eklendi -->
+    <link rel="icon" type="image/png" href="pictures/favicon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
@@ -55,9 +58,10 @@
     <!-- SPLASH SCREEN -->
     <div id="splash-screen">
         <div id="splash-logo" class="opacity-0 scale-90 text-center">
-            <!-- Güncellenen Açılış Logosu (Hata durumundaki kilit simgesi kaldırıldı) -->
+            <!-- Splash logosu için loading optimizasyonu -->
             <img src="pictures/ap_iyilikkoprusu_logo.png" 
-                 alt="İyilik Köprüsü Splash Logo" 
+                 alt="İyilik Köprüsü" 
+                 loading="eager"
                  class="w-32 h-32 mx-auto mb-4 object-contain">
             <h2 class="serif text-2xl font-bold italic">İyilik Köprüsü</h2>
         </div>
@@ -70,7 +74,6 @@
     <nav class="glass-nav fixed top-0 w-full z-50 h-16 border-b border-slate-100 px-6">
         <div class="max-w-7xl mx-auto h-full flex justify-between items-center">
             <button onclick="showSection('home')" class="flex items-center gap-3">
-                <!-- Navigasyon logosu isteğe bağlı olarak kaldırıldı, sadece metin bırakıldı -->
                 <span class="font-extrabold text-slate-900 tracking-tight text-lg">İyilik Köprüsü</span>
             </button>
 
@@ -104,7 +107,7 @@
                     <button onclick="showSection('mission')" class="bg-slate-50 text-slate-600 px-10 py-5 rounded-2xl font-bold hover:bg-slate-100 transition">Proje Hakkında</button>
                 </div>
                 
-                <!-- Yeni Eklenen: İstatistikler -->
+                <!-- İstatistikler -->
                 <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-slate-50">
                     <div><h4 class="text-3xl font-black text-slate-800">%100</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Gönüllülük</p></div>
                     <div><h4 class="text-3xl font-black text-slate-800">Sıfır</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Kâr Amacı</p></div>
@@ -113,7 +116,7 @@
                 </div>
             </div>
 
-            <!-- Yeni Eklenen: Nasıl Çalışır Bölümü -->
+            <!-- Nasıl Çalışır Bölümü -->
             <div class="mt-24 mb-12 text-center" data-aos="fade-up">
                 <h2 class="serif text-4xl italic mb-12">İyilik Çarkı Nasıl İşler?</h2>
                 <div class="grid md:grid-cols-3 gap-8">
@@ -256,7 +259,11 @@
 
         window.showSection = (id) => {
             document.querySelectorAll('.section-page').forEach(s => s.classList.remove('active'));
-            document.getElementById('sec-' + id).classList.add('active');
+            const target = document.getElementById('sec-' + id);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
             if(window.AOS) AOS.refresh();
         };
         window.openLoginModal = () => document.getElementById('login-modal').classList.add('active');
