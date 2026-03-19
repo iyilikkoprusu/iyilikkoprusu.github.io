@@ -55,9 +55,8 @@
     <!-- SPLASH SCREEN -->
     <div id="splash-screen">
         <div id="splash-logo" class="opacity-0 scale-90 text-center">
-            <!-- Güncellenen Açılış Logosu -->
+            <!-- Güncellenen Açılış Logosu (Hata durumundaki kilit simgesi kaldırıldı) -->
             <img src="pictures/ap_iyilikkoprusu_logo.png" 
-                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'" 
                  alt="İyilik Köprüsü Splash Logo" 
                  class="w-32 h-32 mx-auto mb-4 object-contain">
             <h2 class="serif text-2xl font-bold italic">İyilik Köprüsü</h2>
@@ -71,11 +70,7 @@
     <nav class="glass-nav fixed top-0 w-full z-50 h-16 border-b border-slate-100 px-6">
         <div class="max-w-7xl mx-auto h-full flex justify-between items-center">
             <button onclick="showSection('home')" class="flex items-center gap-3">
-                <!-- Güncellenen Site İçi Logosu -->
-                <img src="pictures/iyilikkoprusu_logo.png" 
-                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png'" 
-                     class="w-10 h-10 object-contain" 
-                     alt="Logo">
+                <!-- Navigasyon logosu isteğe bağlı olarak kaldırıldı, sadece metin bırakıldı -->
                 <span class="font-extrabold text-slate-900 tracking-tight text-lg">İyilik Köprüsü</span>
             </button>
 
@@ -103,10 +98,93 @@
             <div class="relative rounded-[2.5rem] bg-white border border-slate-100 p-12 md:p-24 text-center overflow-hidden" data-aos="fade-up">
                 <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-6 block">TÜBİTAK 4006 Tasarım Projesi</span>
                 <h1 class="serif text-5xl md:text-7xl mb-8">Eski Oyuncaklar,<br><span class="italic text-slate-400">Yeni Umutlar.</span></h1>
-                <p class="text-slate-500 max-w-xl mx-auto mb-10 text-lg">Akşemseddin'in yardımlaşma geleneğini teknolojiyle harmanladık. Atıl oyuncakları çocuklar için bir iyilik ekonomisine dönüştürüyoruz.</p>
+                <p class="text-slate-500 max-w-2xl mx-auto mb-10 text-lg leading-relaxed">Akşemseddin'in yardımlaşma geleneğini teknolojiyle harmanladık. Atıl oyuncakları evlerden topluyor, dezenfekte ediyor ve dijital platformumuz üzerinden yepyeni çocuklara ulaştırıyoruz. Buradan elde edilen geliri ise bir "iyilik ekonomisine" dönüştürüyoruz.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button onclick="showSection('catalog')" class="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold btn-hover">Kataloğa Göz At</button>
                     <button onclick="showSection('mission')" class="bg-slate-50 text-slate-600 px-10 py-5 rounded-2xl font-bold hover:bg-slate-100 transition">Proje Hakkında</button>
+                </div>
+                
+                <!-- Yeni Eklenen: İstatistikler -->
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-slate-50">
+                    <div><h4 class="text-3xl font-black text-slate-800">%100</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Gönüllülük</p></div>
+                    <div><h4 class="text-3xl font-black text-slate-800">Sıfır</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Kâr Amacı</p></div>
+                    <div><h4 class="text-3xl font-black text-slate-800">Sürekli</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Döngüsel İyilik</p></div>
+                    <div><h4 class="text-3xl font-black text-blue-600">Gazze</h4><p class="text-xs text-slate-400 font-bold uppercase mt-1">Ve Yetim Fonu</p></div>
+                </div>
+            </div>
+
+            <!-- Yeni Eklenen: Nasıl Çalışır Bölümü -->
+            <div class="mt-24 mb-12 text-center" data-aos="fade-up">
+                <h2 class="serif text-4xl italic mb-12">İyilik Çarkı Nasıl İşler?</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:-translate-y-2 transition-transform duration-300">
+                        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="package-plus" class="w-8 h-8"></i></div>
+                        <h3 class="font-bold text-xl mb-3">1. Bağışla</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Evde kullanılmayan, temiz durumdaki oyuncaklar okulumuzdaki kumbaralara bırakılır.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:-translate-y-2 transition-transform duration-300">
+                        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="monitor-smartphone" class="w-8 h-8"></i></div>
+                        <h3 class="font-bold text-xl mb-3">2. Dijitale Aktar</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Oyuncaklar proje ekibince kalite kontrolden geçirilerek fotoğraflanır ve bu sisteme yüklenir.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:-translate-y-2 transition-transform duration-300">
+                        <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="heart-handshake" class="w-8 h-8"></i></div>
+                        <h3 class="font-bold text-xl mb-3">3. Umuda Dönüşsün</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Katalogdan alınan oyuncakların tüm geliri yetim kardeşlerimiz ve Gazze fonuna aktarılır.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VAKIF RUHU (PROJE HAKKINDA) -->
+        <section id="sec-mission" class="section-page max-w-5xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Dijital Vakıf Senedi -->
+                <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm" data-aos="fade-up">
+                    <h2 class="serif text-3xl italic mb-8 flex items-center gap-4 text-blue-900">
+                        <i data-lucide="clipboard-list" class="w-8 h-8 text-blue-600"></i> Dijital Vakıf Senedi
+                    </h2>
+                    <div class="space-y-5 text-slate-600 leading-relaxed text-sm">
+                        <p class="font-bold text-base text-slate-800 italic border-l-4 border-blue-600 pl-4 mb-6">"Gönül kumbarasından uzanan bir köprü..."</p>
+                        <p><strong>1. Amaç:</strong> Akşemseddin Hazretleri'nin paylaşımcı ruhunu dijital çağda yaşatarak, okul çapında bir döngüsel iyilik ekonomisi oluşturmaktır.</p>
+                        <p><strong>2. Kaynak:</strong> Sistemimizin temel kaynağı, evlerde atıl durumda bulunan temiz oyuncaklardır. İsrafı önler, sıfır atık bilincini destekleriz.</p>
+                        <p><strong>3. Kapsam:</strong> İyiliğe dokunmak isteyen herkes bu dijital platform aracılığıyla sürece dahil olabilir.</p>
+                        <p><strong>4. Süreç:</strong> Bağışlanan oyuncaklar kalite kontrolden geçer, katalogda sergilenir ve yeni sahipleriyle buluşturulur.</p>
+                    </div>
+                </div>
+
+                <!-- Şeffaflık Raporu -->
+                <div class="bg-slate-900 text-white p-10 rounded-[3rem] shadow-xl relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -right-10 -top-10 opacity-10"><i data-lucide="shield-check" class="w-64 h-64"></i></div>
+                    <div class="relative z-10">
+                        <h2 class="serif text-3xl italic mb-6 flex items-center gap-4 text-emerald-400">
+                            <i data-lucide="bar-chart-3" class="w-8 h-8"></i> Şeffaflık Raporu
+                        </h2>
+                        <p class="text-slate-300 text-sm mb-8 leading-relaxed">TÜBİTAK 4006 standartları ve vakıf kültürü gereği, toplanan tüm gelirler kayıt altına alınmakta ve ihtiyaç sahiplerine ulaştırılmaktadır.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-white/10 p-4 rounded-2xl flex justify-between items-center border border-white/5 backdrop-blur-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-sm">Toplanan Oyuncak</span>
+                                </div>
+                                <span class="font-black text-xl">145+</span>
+                            </div>
+                            <div class="bg-white/10 p-4 rounded-2xl flex justify-between items-center border border-white/5 backdrop-blur-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-blue-500/20 rounded-lg text-blue-400"><i data-lucide="refresh-cw" class="w-5 h-5"></i></div>
+                                    <span class="font-bold text-sm">Dönüştürülen (Satılan)</span>
+                                </div>
+                                <span class="font-black text-xl">82</span>
+                            </div>
+                            <div class="bg-slate-800/80 p-5 rounded-2xl flex items-start gap-4 border border-white/5 mt-6">
+                                <i data-lucide="info" class="w-6 h-6 text-yellow-400 shrink-0 mt-1"></i>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    Elde edilen gelirler okulumuz idaresi denetiminde resmi kurumlara (Kızılay, İHH vb.) Gazze ve Yetim Fonu açıklamasıyla yatırılmakta, dekontlar okul panosunda sergilenmektedir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
