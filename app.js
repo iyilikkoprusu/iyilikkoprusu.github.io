@@ -2,7 +2,7 @@
 const { Client, Databases, ID, Query } = Appwrite;
 
 const client = new Client()
-    .setEndpoint('https://cloud.appwrite.io/v1') // Kendi sunucun varsa burayı değiştir
+    .setEndpoint('https://cloud.appwrite.io/v1')
     .setProject('iyilikkoprusu');
 
 const databases = new Databases(client);
@@ -22,22 +22,18 @@ const submitBtn = document.getElementById('submit-btn');
 // 1. Ürünleri Çek ve Akıllı Loader'ı Kapat
 async function fetchProducts() {
     try {
-        // Sadece durumu 'Satıldı' OLMAYAN ürünleri getir
         const response = await databases.listDocuments(
             DB_ID,
-            URUNLER_COLLECTION,[
+            URUNLER_COLLECTION, [
                 Query.notEqual('durum', 'Satıldı'),
                 Query.orderDesc('$createdAt')
             ]
         );
-
         renderProducts(response.documents);
-
     } catch (error) {
         console.error("Veri çekme hatası:", error);
         if (productsGrid) productsGrid.innerHTML = `<p class="col-span-full text-center text-red-400">Veriler yüklenirken bir hata oluştu.</p>`;
     } finally {
-        // Veri akışı bittiğinde loader'ı gizle
         if (smartLoader) {
             smartLoader.style.opacity = '0';
             setTimeout(() => {
@@ -68,7 +64,6 @@ function renderProducts(products = []) {
             </div>
             <h4 class="font-semibold text-white mb-1 px-2 truncate">${p.isim || 'İsimsiz Oyuncak'}</h4>
             <p class="text-xs text-slate-400 px-2 mb-6 truncate">${p.aciklama || 'Açıklama bulunmuyor.'}</p>
-            
             <button onclick="openModal('${p.$id}')" class="w-full bg-white/5 hover:bg-blue-600 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors border border-white/10 hover:border-blue-500">
                 Ayırt
             </button>
@@ -78,7 +73,8 @@ function renderProducts(products = []) {
 
 // 3. Modal İşlemleri
 window.openModal = (productId) => {
-    document.getElementById('selected-product-id').value = productId;
+    const idField = document.getElementById('selected-product-id');
+    if (idField) idField.value = productId;
     if (orderModal) orderModal.classList.add('active');
 };
 
@@ -91,23 +87,20 @@ window.closeModal = () => {
 if (orderForm) {
     orderForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const productId = document.getElementById('selected-product-id').value;
         const studentName = document.getElementById('student-name').value;
         const studentClass = document.getElementById('student-class').value;
 
-        // Butonu yükleniyor durumuna al
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = `<div class="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div> İşleniyor...`;
         submitBtn.disabled = true;
 
         try {
-            // A. Siparişler tablosuna kayıt ekle
             await databases.createDocument(
                 DB_ID,
                 SIPARISLER_COLLECTION,
-                ID.unique(),
-                {
+                ID.unique(), {
                     urun_id: productId,
                     ad_soyad: studentName,
                     sinif: studentClass,
@@ -115,46 +108,39 @@ if (orderForm) {
                 }
             );
 
-            // B. Ürünler tablosunda durumu 'Satıldı' yap
             await databases.updateDocument(
                 DB_ID,
                 URUNLER_COLLECTION,
-                productId,
-                { durum: 'Satıldı' }
+                productId, {
+                    durum: 'Satıldı'
+                }
             );
 
-            // C. Başarılı - Modalı kapat
             closeModal();
 
-            // D. Dissolve (Buharlaşma) efekti ile ürünü DOM'dan sil
             const productCard = document.getElementById(`product-${productId}`);
             if (productCard) {
                 productCard.classList.add('dissolve-out');
-                
-                // Animasyon bitince elementi tamamen kaldır
                 setTimeout(() => {
                     productCard.remove();
-                    
-                    // Eğer ekranda hiç ürün kalmadıysa boş mesajını göster
-                    if (productsGrid.children.length === 0) {
-                        renderProducts([]); 
+                    if (productsGrid && productsGrid.children.length === 0) {
+                        renderProducts([]);
                     }
-                }, 500); // 500ms animasyon süresi
+                }, 500);
             }
-            alert("Oyuncak senin için başarıyla ayrıldı!");
+            alert("Harika! Oyuncak senin adına ayrıldı.");
 
         } catch (error) {
             console.error("Sipariş hatası:", error);
-            alert("Sipariş sırasında bir hata oluştu.");
+            alert("Bir hata oluştu, lütfen tekrar dene.");
         } finally {
-            // Butonu eski haline getir
             submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
         }
     });
 }
 
-// Sayfa yüklendiğinde ürünleri çek
+// 5. Başlatıcı
 document.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
 });
