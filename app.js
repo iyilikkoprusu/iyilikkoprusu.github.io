@@ -133,6 +133,17 @@ orderForm.addEventListener('submit', async (e) => {
             setTimeout(() => {
                 productCard.remove();
                 
-                // Eğer ekranda hiç ürün kalmadıysa mesaj göster
-                if(productsGrid.children.length === 0) {
-                    renderProducts(
+                if (productsGrid.children.length === 0) {
+            renderProducts(); // Yarım kalan fonksiyonu kapattık
+        }
+    } finally {
+        // Butonu eski haline getir
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+    }
+});
+
+// Sayfa yüklendiğinde ürünleri çek
+document.addEventListener('DOMContentLoaded', () => {
+    fetchProducts();
+});
