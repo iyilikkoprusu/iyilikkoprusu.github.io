@@ -128,6 +128,7 @@ orderForm.addEventListener('submit', async (e) => {
         const productCard = document.getElementById(`product-${productId}`);
         if (productCard) {
             productCard.classList.add('dissolve-out');
+            
             // Animasyon bitince elementi tamamen kaldır
             setTimeout(() => {
                 productCard.remove();
