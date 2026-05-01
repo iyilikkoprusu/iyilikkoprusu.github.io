@@ -21,10 +21,20 @@ async function fetchProducts() {
             Query.notEqual('durum', 'Satıldı'),
             Query.orderDesc('$createdAt')
         ]);
-        console.log("Gelen Veri:", response.documents); // Buraya bakınca her şey çözülür
+        console.log("Gelen Veri:", response.documents);
         renderProducts(response.documents);
     } catch (error) {
         console.error("Yükleme Hatası:", error);
+    } finally {
+        // Loader'ı gizle
+        const loader = document.getElementById('smart-loader');
+        if (loader) {
+            loader.style.opacity = '0';
+            loader.style.pointerEvents = 'none';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 700);
+        }
     }
 }
 
@@ -36,7 +46,6 @@ function renderProducts(products) {
     }
 
     productsGrid.innerHTML = products.map(p => {
-        // HATAYI BURADA ÇÖZÜYORUZ: Hangisi varsa onu al
         const urunIsmi = p.baslik || p.urunAdi || p.isim || p['baslik'] || 'İsimsiz Oyuncak'; 
         const urunGorsel = p.resimUrl || p.gorsel || p['resimUrl'] || 'https://via.placeholder.com/600';
         const urunFiyat = p.fiyat || 0;
@@ -51,58 +60,77 @@ function renderProducts(products) {
             </div>
             <h4 class="font-semibold text-white mb-1 px-2 truncate">${urunIsmi}</h4>
             <p class="text-xs text-slate-400 px-2 mb-6 truncate">${p.aciklama || ''}</p>
-            <button onclick="openModal('${p.$id}', '${urunIsmi.replace(/'/g, "\\'")}')" class="w-full bg-white/5 hover:bg-blue-600 text-white py-3 rounded-xl text-xs font-bold uppercase transition-all">
+            <button onclick="openModal('${p.$id}', '${urunIsmi.replace(/'/g, "\\'")}')" class="w-full bg-white/5 hover:bg-blue-600 text-white py-3 rounded-xl text-xs font-bold uppercase transition-all duration-300">
                 Ayırt
             </button>
         </div>`;
     }).join('');
 }
 
-// Modal ve Sipariş Fonksiyonları (İsimleri senin tabloya göre sabitledim)
 window.openModal = (productId, productName) => {
-    document.getElementById('selected-product-id').value = productId;
-    const nameInp = document.getElementById('selected-product-name');
-    if (nameInp) nameInp.value = productName;
-    orderModal.classList.add('active');
+    const productIdInput = document.getElementById('selected-product-id');
+    const productNameInput = document.getElementById('selected-product-name');
+    
+    if (productIdInput) productIdInput.value = productId;
+    if (productNameInput) productNameInput.value = productName;
+    
+    if (orderModal) {
+        orderModal.classList.add('active');
+    }
 };
 
 window.closeModal = () => {
-    orderModal.classList.remove('active');
-    orderForm.reset();
+    if (orderModal) {
+        orderModal.classList.remove('active');
+    }
+    if (orderForm) {
+        orderForm.reset();
+    }
 };
 
-orderForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const productId = document.getElementById('selected-product-id').value;
-    const productName = document.getElementById('selected-product-name')?.value || "Bilinmeyen";
-    const studentName = document.getElementById('student-name').value;
-    const studentClass = document.getElementById('student-class').value;
+if (orderForm) {
+    orderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const productId = document.getElementById('selected-product-id')?.value;
+        const productName = document.getElementById('selected-product-name')?.value || "Bilinmeyen";
+        const studentName = document.getElementById('student-name')?.value;
+        const studentClass = document.getElementById('student-class')?.value;
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = "...";
+        if (!productId || !studentName || !studentClass) {
+            alert("Lütfen tüm alanları doldurunuz!");
+            return;
+        }
 
-    try {
-        // Senin 'sipariler' tablonun gerçek sütunları
-        await databases.createDocument(DB_ID, SIPARISLER_COLLECTION, ID.unique(), {
-            urunAdi: productName,
-            aliciAdSoyad: studentName,
-            sinif: studentClass,
-            tarih: new Date().toISOString()
-        });
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = "...";
+        }
 
-        await databases.updateDocument(DB_ID, URUNLER_COLLECTION, productId, {
-            durum: 'Satıldı'
-        });
+        try {
+            await databases.createDocument(DB_ID, SIPARISLER_COLLECTION, ID.unique(), {
+                urunAdi: productName,
+                aliciAdSoyad: studentName,
+                sinif: studentClass,
+                tarih: new Date().toISOString()
+            });
 
-        closeModal();
-        document.getElementById(`product-${productId}`)?.remove();
-        alert("Başarılı!");
-    } catch (err) {
-        alert("Hata: " + err.message);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = "Ayırt ve Bağışla";
-    }
-});
+            await databases.updateDocument(DB_ID, URUNLER_COLLECTION, productId, {
+                durum: 'Satıldı'
+            });
+
+            closeModal();
+            document.getElementById(`product-${productId}`)?.remove();
+            alert("Başarılı!");
+        } catch (err) {
+            console.error("Sipariş Hatası:", err);
+            alert("Hata: " + err.message);
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Ayırt ve Bağışla";
+            }
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', fetchProducts);
