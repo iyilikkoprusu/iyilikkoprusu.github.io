@@ -23,4 +23,4 @@ Bu klasörde Appwrite aracılığıyla siteye aktarılacak ürün fotoğrafları
 Örnek:"*iyilikkoprusu.org/urunfotograflari/ik-urunfotografi-2601.webp*"*
 
                                                                                                         
-|                                                                                                        — İyilik Köprüsü | Eyüp Ensar
+— İyilik Köprüsü | Eyüp Ensar
