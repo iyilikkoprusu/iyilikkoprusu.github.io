@@ -2,7 +2,7 @@ async function oyuncakAyirt(urunId, urunAdi, fiyat) {
     const isim = prompt("Adın Soyadın:");
     const sinif = prompt("Sınıfın (Örn: 8-C):");
 
-    if(!isim || !sinif) return alert("Hoppala! Bilgileri girmeden iyilik köprüsü kurulmaz.");
+    if(!isim || !sinif) return alert("HATA! Bilgileri girmeden sipariş verilemez.");
 
     try {
         // 1. ADIM: Siparişi oluştur
@@ -19,9 +19,9 @@ async function oyuncakAyirt(urunId, urunAdi, fiyat) {
             "durum": "Satıldı" 
         });
 
-        alert(`Tamamdır ${isim}! Oyuncağı senin için ayırdım. Teneffüste parayı getir, oyuncağını al. Gazze'deki kardeşlerimize selam olsun!`);
+        alert(`Tamamdır ${isim}! Oyuncak senin için ayırdık. Teneffüste yetkili ekibe ürün ücretini getir, sipariş verdiğin oyuncağı al. Allah kabul etsin!`);
         location.reload(); // Sayfayı yenile ki ürün 'Satıldı' görünsün
     } catch (error) {
-        alert("Bir hata oluştu, ID'leri kontrol et kral!");
+        alert("Bir hata oluştu, ID'leri kontrol et!");
     }
 }
