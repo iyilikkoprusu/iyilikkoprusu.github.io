@@ -44,4 +44,4 @@ Projenin katalog bölümünde yer alan görseller, web performansını artırmak
 ---
 > **"Geçmişin ruhu, geleceğin teknolojisiyle buluşuyor. Akşemseddin’in izinde, iyilik her yerde!"**
 
-| **~İyilik Köprüsü**
+ **~ İyilik Köprüsü Projesi Ekibi**
