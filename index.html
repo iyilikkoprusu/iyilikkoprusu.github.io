@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light" data-lang="tr" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,14 +34,14 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="text-slate-200 antialiased selection:bg-blue-500/30">
+<body class="antialiased selection:bg-emerald-500/25 dark:selection:bg-blue-500/30">
 
     <div id="smart-loader" class="fixed inset-0 z-[9999] glass-heavy flex flex-col items-center justify-center transition-opacity duration-700">
         <div class="relative w-24 h-24 flex items-center justify-center">
-            <div class="absolute inset-0 border-t-2 border-blue-400 rounded-full animate-spin"></div>
-            <i data-lucide="heart-handshake" class="w-8 h-8 text-blue-400 animate-pulse"></i>
+            <div class="absolute inset-0 border-t-2 loader-ring rounded-full animate-spin"></div>
+            <i data-lucide="heart-handshake" class="w-8 h-8 loader-accent animate-pulse"></i>
         </div>
-        <p class="mt-6 text-sm tracking-[0.3em] uppercase text-blue-300/70 font-light">Veriler Çekiliyor...</p>
+        <p class="mt-6 text-sm tracking-[0.3em] uppercase loader-caption font-light" data-i18n="loader_text">Veriler çekiliyor…</p>
     </div>
 
     <div id="toast" class="toast-base fixed top-24 left-1/2 -translate-x-1/2 z-[1002] px-6 py-3 rounded-full glass-panel border border-white/10 text-sm text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90vw] text-center md:max-w-md" role="status" aria-live="polite" data-variant="info"></div>
@@ -56,12 +56,21 @@
                 <span class="font-bold text-white tracking-wide text-lg truncate group-hover:text-blue-300 transition-colors">İyilik Köprüsü</span>
             </a>
 
-            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-slate-400">
-                <a href="#anasayfa" class="nav-link hover:text-blue-400 transition-colors" data-nav-link>Ana Sayfa</a>
-                <a href="#vakif" class="nav-link hover:text-blue-400 transition-colors" data-nav-link>Vakıf Ruhu</a>
-                <a href="#nasil-siparis" class="nav-link hover:text-blue-400 transition-colors" data-nav-link>Nasıl Sipariş?</a>
-                <a href="#magaza" class="nav-link hover:text-blue-400 transition-colors" data-nav-link>Mağaza</a>
-                <a href="#siparislerim" class="nav-link hover:text-blue-400 transition-colors" data-nav-link>Siparişlerim</a>
+            <div class="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                <a href="#anasayfa" class="nav-link hover:text-emerald-700 dark:hover:text-blue-400 transition-colors" data-nav-link data-i18n="nav_home">Ana sayfa</a>
+                <a href="#vakif" class="nav-link hover:text-emerald-700 dark:hover:text-blue-400 transition-colors" data-nav-link data-i18n="nav_vakif">Vakıf ruhu</a>
+                <a href="#nasil-siparis" class="nav-link hover:text-emerald-700 dark:hover:text-blue-400 transition-colors" data-nav-link data-i18n="nav_how">Nasıl yapılır?</a>
+                <a href="#magaza" class="nav-link hover:text-emerald-700 dark:hover:text-blue-400 transition-colors" data-nav-link data-i18n="nav_shop">Mağaza</a>
+                <a href="#siparislerim" class="nav-link hover:text-emerald-700 dark:hover:text-blue-400 transition-colors" data-nav-link data-i18n="nav_orders">Kayıtlarım</a>
+            </div>
+
+            <div id="app-controls" class="hidden md:flex items-center shrink-0">
+                <label class="sr-only" for="lang-select" data-i18n="lang_label">Dil</label>
+                <select id="lang-select" class="lang-select" aria-label="Language"></select>
+                <button type="button" id="theme-toggle" class="theme-toggle" data-i18n-title="theme_toggle_aria" title="Tema">
+                    <i data-lucide="moon" class="w-4 h-4 icon-theme-dark hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 icon-theme-light"></i>
+                </button>
             </div>
 
             <button type="button" id="mobile-menu-toggle" class="md:hidden glass-panel rounded-2xl p-3 border border-white/10 text-slate-200 hover:text-white" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü">
@@ -69,12 +78,19 @@
                 <i data-lucide="x" class="w-5 h-5 menu-icon-close hidden"></i>
             </button>
         </div>
-        <div id="mobile-menu" class="md:hidden hidden border-t border-white/5 glass-panel px-6 py-4 space-y-3 text-xs font-semibold uppercase tracking-widest text-slate-300">
-            <a href="#anasayfa" class="block py-2 nav-link-mobile hover:text-blue-400" data-nav-link>Ana Sayfa</a>
-            <a href="#vakif" class="block py-2 nav-link-mobile hover:text-blue-400" data-nav-link>Vakıf Ruhu</a>
-            <a href="#nasil-siparis" class="block py-2 nav-link-mobile hover:text-blue-400" data-nav-link>Nasıl Sipariş?</a>
-            <a href="#magaza" class="block py-2 nav-link-mobile hover:text-blue-400" data-nav-link>Mağaza</a>
-            <a href="#siparislerim" class="block py-2 nav-link-mobile hover:text-blue-400" data-nav-link>Siparişlerim</a>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-white/5 glass-panel px-6 py-4 space-y-4 text-xs font-semibold uppercase tracking-widest text-slate-300">
+            <div id="app-controls-mobile" class="flex flex-wrap items-center gap-2 pb-2 border-b border-white/5">
+                <select id="lang-select-mobile" class="lang-select flex-1 min-w-[8rem]" aria-label="Language"></select>
+                <button type="button" id="theme-toggle-mobile" class="theme-toggle shrink-0" data-i18n-title="theme_toggle_aria" title="Tema">
+                    <i data-lucide="moon" class="w-4 h-4 icon-theme-dark hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 icon-theme-light"></i>
+                </button>
+            </div>
+            <a href="#anasayfa" class="block py-2 nav-link-mobile hover:text-emerald-600 dark:hover:text-blue-400" data-nav-link data-i18n="nav_home">Ana sayfa</a>
+            <a href="#vakif" class="block py-2 nav-link-mobile hover:text-emerald-600 dark:hover:text-blue-400" data-nav-link data-i18n="nav_vakif">Vakıf ruhu</a>
+            <a href="#nasil-siparis" class="block py-2 nav-link-mobile hover:text-emerald-600 dark:hover:text-blue-400" data-nav-link data-i18n="nav_how">Nasıl yapılır?</a>
+            <a href="#magaza" class="block py-2 nav-link-mobile hover:text-emerald-600 dark:hover:text-blue-400" data-nav-link data-i18n="nav_shop">Mağaza</a>
+            <a href="#siparislerim" class="block py-2 nav-link-mobile hover:text-emerald-600 dark:hover:text-blue-400" data-nav-link data-i18n="nav_orders">Kayıtlarım</a>
         </div>
     </nav>
 
@@ -89,41 +105,41 @@
                     <img src="pictures/iyilikkoprusu_logo.png" alt="İyilik Köprüsü logosu" class="max-h-40 md:max-h-52 w-auto object-contain rounded-3xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.55)] border border-white/10" decoding="async" width="520" height="208">
                 </div>
 
-                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-blue-400 mb-6 block">TÜBİTAK 4006 Tasarım Projesi</span>
+                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-700 dark:text-blue-400 mb-6 block" data-i18n="hero_kicker">TÜBİTAK 4006 okul projesi</span>
                 <h1 class="text-5xl md:text-7xl font-light mb-8 text-white leading-tight">
-                    Eski Oyuncaklar,<br>
-                    <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Yeni Umutlar.</span>
+                    <span data-i18n="hero_title_1">Eski oyuncaklar,</span><br>
+                    <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600" data-i18n="hero_title_2">Yeni umutlar.</span>
                 </h1>
-                <p class="text-slate-400 max-w-2xl mx-auto mb-12 text-lg leading-relaxed font-light">
-                    Akşemseddin'in yardımlaşma geleneğini teknolojiyle harmanladık. Atıl oyuncakları evlerden topluyor, dezenfekte ediyor ve dijital platformumuz üzerinden yepyeni çocuklara ulaştırıyoruz.
+                <p class="text-slate-400 max-w-2xl mx-auto mb-12 text-lg leading-relaxed font-light" data-i18n="hero_p">
+                    Akşemseddin’de dayanışma geleneğini dijital kermesle buluşturuyoruz: oyuncaklar yeniden değerlenir, gelir iyilik amaçlarına aktarılır.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <a href="#magaza" class="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-md">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                        Kataloğa Göz At
+                        <span data-i18n="hero_cta_catalog">Mağazaya git</span>
                     </a>
                     <a href="#nasil-siparis" class="inline-flex items-center gap-3 text-slate-300 hover:text-white text-sm uppercase tracking-[0.2em] px-4 py-4 border border-transparent hover:border-white/10 rounded-full transition-all">
                         <i data-lucide="list-ordered" class="w-4 h-4"></i>
-                        Sipariş sürecini oku
+                        <span data-i18n="hero_cta_how">Süreci oku</span>
                     </a>
                 </div>
             </section>
 
             <div class="grid md:grid-cols-3 gap-6">
                 <a href="#vakif" class="glass-panel rounded-[2rem] p-8 border border-white/5 hover:border-white/15 transition-colors text-left block">
-                    <i data-lucide="hand-heart" class="w-8 h-8 text-blue-400 mb-4"></i>
-                    <h2 class="text-white font-serif italic text-xl mb-2">Vakıf ruhu</h2>
-                    <p class="text-slate-400 text-sm font-light leading-relaxed">Bağış ve şeffaf kullanım hakkında kısa bir özet. Ayrıntılar için tıklayın.</p>
+                    <i data-lucide="hand-heart" class="w-8 h-8 text-emerald-600 dark:text-blue-400 mb-4"></i>
+                    <h2 class="text-white font-serif italic text-xl mb-2" data-i18n="card_vakif_t">Vakıf ruhu</h2>
+                    <p class="text-slate-400 text-sm font-light leading-relaxed" data-i18n="card_vakif_p">Amaç ve şeffaflık için kısa özet.</p>
                 </a>
                 <a href="#nasil-siparis" class="glass-panel rounded-[2rem] p-8 border border-white/5 hover:border-white/15 transition-colors text-left block">
-                    <i data-lucide="route" class="w-8 h-8 text-purple-400 mb-4"></i>
-                    <h2 class="text-white font-serif italic text-xl mb-2">Adım adım süreç</h2>
-                    <p class="text-slate-400 text-sm font-light leading-relaxed">Dijital mağaza üzerinden ayırtma ve okul içi teslim döngüsü.</p>
+                    <i data-lucide="route" class="w-8 h-8 text-teal-600 dark:text-purple-400 mb-4"></i>
+                    <h2 class="text-white font-serif italic text-xl mb-2" data-i18n="card_how_t">Nasıl yapılır?</h2>
+                    <p class="text-slate-400 text-sm font-light leading-relaxed" data-i18n="card_how_p">Ayırma ve okul içi teslim adımları.</p>
                 </a>
                 <a href="#siparislerim" class="glass-panel rounded-[2rem] p-8 border border-white/5 hover:border-white/15 transition-colors text-left block">
-                    <i data-lucide="history" class="w-8 h-8 text-blue-400 mb-4"></i>
-                    <h2 class="text-white font-serif italic text-xl mb-2">Siparişlerim</h2>
-                    <p class="text-slate-400 text-sm font-light leading-relaxed">Bu tarayıcıda verdiğin siparişlerin özeti güvenli şekilde burada görünür.</p>
+                    <i data-lucide="history" class="w-8 h-8 text-emerald-600 dark:text-blue-400 mb-4"></i>
+                    <h2 class="text-white font-serif italic text-xl mb-2" data-i18n="card_orders_t">Kayıtlarım</h2>
+                    <p class="text-slate-400 text-sm font-light leading-relaxed" data-i18n="card_orders_p">Bu cihazdaki ayırma kayıtların.</p>
                 </a>
             </div>
         </div>
@@ -131,18 +147,18 @@
         <!-- #vakif -->
         <div id="route-vakif" class="route-page hidden space-y-12">
             <header class="text-center md:text-left">
-                <p class="text-[10px] uppercase tracking-[0.4em] text-blue-400 font-bold mb-3">Şeffaflık &amp; Amaç</p>
-                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4">Vakıf ruhu: İyilik Köprüsü</h2>
-                <p class="text-slate-400 font-light max-w-2xl">TÜBİTAK 4006 kapsamında Akşemseddin İHO öğrencileri olarak, sürdürülebilir paylaşım ve dayanışma için dijital bir köprü kuruyoruz.</p>
+                <p class="text-[10px] uppercase tracking-[0.4em] text-emerald-700 dark:text-blue-400 font-bold mb-3" data-i18n="vakif_kicker">Şeffaflık ve amaç</p>
+                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4" data-i18n="vakif_title">İyilik Köprüsü</h2>
+                <p class="text-slate-400 font-light max-w-2xl" data-i18n="vakif_intro">TÜBİTAK 4006 kapsamında okul dayanışması için dijital bir köprü kuruyoruz.</p>
             </header>
             <div class="grid lg:grid-cols-2 gap-8 items-stretch">
                 <article class="glass-panel rounded-[2.5rem] p-10 border border-white/5 space-y-4">
-                    <h3 class="text-white font-semibold text-lg">Neden oyuncak?</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed font-light">Evde bekleyen oyuncakları yeniden değerlendirerek sıfır atığa küçük ama güçlü bir katkı sunuyor; her oyuncağın yeni bir yüz güldürmesini hedefliyoruz.</p>
+                    <h3 class="text-white font-semibold text-lg" data-i18n="vakif_q1">Neden oyuncak?</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-light" data-i18n="vakif_a1">Oyuncakları yeniden değerlendirerek sıfır atığa katkı ve çocuklara umut hedefliyoruz.</p>
                 </article>
                 <article class="glass-panel rounded-[2.5rem] p-10 border border-white/5 space-y-4">
-                    <h3 class="text-white font-semibold text-lg">Gelirin yönü</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed font-light">Kermeden elde edilen gelir Gazze için insani destek ile yetim fonu çizgisinde kullanılacak projelere aktarılır; süreci güven ve hesap verebilirlik üzerinden yürütürüz.</p>
+                    <h3 class="text-white font-semibold text-lg" data-i18n="vakif_q2">Gelirin yönü</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-light" data-i18n="vakif_a2">Kermes geliri duyurulan iyilik amaçları doğrultusunda kullanılır; süreç okul ve proje ekibiyle şeffaftır.</p>
                 </article>
             </div>
         </div>
@@ -150,37 +166,43 @@
         <!-- #nasil-siparis -->
         <div id="route-nasil-siparis" class="route-page hidden space-y-12">
             <header class="text-center md:text-left">
-                <p class="text-[10px] uppercase tracking-[0.4em] text-purple-400 font-bold mb-3">Akış</p>
-                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4">Nasıl sipariş verilir?</h2>
-                <p class="text-slate-400 font-light max-w-2xl">Tamamı okul güvenliğimiz dahilinde, dijital mağaza + yüz yüze teslim kombinasyonu ile ilerliyoruz.</p>
+                <p class="text-[10px] uppercase tracking-[0.4em] text-teal-700 dark:text-purple-400 font-bold mb-3" data-i18n="how_kicker">Akış</p>
+                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4" data-i18n="how_title">Nasıl yapılır?</h2>
+                <p class="text-slate-400 font-light max-w-2xl" data-i18n="how_intro">Okul güvenliği çerçevesinde dijital mağaza ve yüz yüze teslim.</p>
             </header>
+            <div class="support-help-row max-w-3xl" data-support-anchor>
+                <span class="support-help-text" data-i18n="support_prompt">Sipariş ayırtma işlemiyle ilgili bir sorun mu yaşıyorsunuz?</span>
+                <button type="button" class="support-help-trigger" data-support-trigger aria-expanded="false" aria-haspopup="dialog" data-i18n-title="support_trigger_aria" title="İletişim ve destek">
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </button>
+            </div>
             <ol class="space-y-6 max-w-3xl">
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
-                    <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">1</span>
+                    <span class="shrink-0 w-12 h-12 rounded-full bg-emerald-600/20 dark:bg-blue-600/25 border border-emerald-500/40 dark:border-blue-400/40 flex items-center justify-center text-white font-bold">1</span>
                     <div>
-                        <h3 class="text-white font-semibold mb-2">Mağazadan ürün seç</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed"><a href="#magaza" class="text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline">Mağaza</a> bölümünde kermeste satılan oyuncakları incele; fotoğraf ve katkı payı ürün kartında görünür.</p>
+                        <h3 class="text-white font-semibold mb-2" data-i18n="how_step1_t">Mağazadan seç</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed how-step1-p"></p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
-                    <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">2</span>
+                    <span class="shrink-0 w-12 h-12 rounded-full bg-emerald-600/20 dark:bg-blue-600/25 border border-emerald-500/40 dark:border-blue-400/40 flex items-center justify-center text-white font-bold">2</span>
                     <div>
-                        <h3 class="text-white font-semibold mb-2">Ayır: bilgilerini gir</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed">“Ayır” ile açılan formda <strong class="text-slate-300 font-normal">adını soyadını</strong> ve okul formatında <strong class="text-slate-300 font-normal">sınıf / şube bilgini</strong> (örn. 8/A, 10-C) yaz. Kayıt Appwrite’a düşer; ürün başkasına gösterilmesin diye satıldı işaretlenir.</p>
+                        <h3 class="text-white font-semibold mb-2" data-i18n="how_step2_t">Bilgilerini gir</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed" data-i18n="how_step2_p">“Ayır” formunda adın soyadın ve listeden sınıf / şuben seçilir; kayıt sunucuya düşer, ürün satıldı işaretlenir.</p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
-                    <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">3</span>
+                    <span class="shrink-0 w-12 h-12 rounded-full bg-emerald-600/20 dark:bg-blue-600/25 border border-emerald-500/40 dark:border-blue-400/40 flex items-center justify-center text-white font-bold">3</span>
                     <div>
-                        <h3 class="text-white font-semibold mb-2">Okul içi teslim ve ödeme</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed">Ayırdığın oyuncağın katkı payını, proje ekibinin duyurduğu zaman diliminde ve okulda belirlenen güvenli noktada teslim et. Her zaman görevli öğretmen veya görevli öğrenci ile teyit et.</p>
+                        <h3 class="text-white font-semibold mb-2" data-i18n="how_step3_t">Okul içi teslim</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed" data-i18n="how_step3_p">Katkı payını duyurulan saatte ve güvenli noktada teslim et; görevli öğretmen veya öğrenciyle teyit et.</p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
-                    <span class="shrink-0 w-12 h-12 rounded-full bg-purple-600/25 border border-purple-400/40 flex items-center justify-center text-white font-bold">4</span>
+                    <span class="shrink-0 w-12 h-12 rounded-full bg-teal-600/20 dark:bg-purple-600/25 border border-teal-500/40 dark:border-purple-400/40 flex items-center justify-center text-white font-bold">4</span>
                     <div>
-                        <h3 class="text-white font-semibold mb-2">Geçmişini bu cihazda gör</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed">Başarılı ayırmalarını <a href="#siparislerim" class="text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline">Siparişlerim</a> sayfasından takip et. Liste yalnızca bu tarayıcıdaki yerel saklamada tutulur; hesap gerektirmez.</p>
+                        <h3 class="text-white font-semibold mb-2" data-i18n="how_step4_t">Bu cihazda geçmiş</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed how-step4-p"></p>
                     </div>
                 </li>
             </ol>
@@ -190,13 +212,20 @@
         <div id="route-magaza" class="route-page hidden space-y-12">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
-                    <h2 class="text-4xl font-serif italic text-white mb-2">İyilik Mağazası</h2>
-                    <p class="text-slate-400 font-light text-sm">Tüm gelir Gazze ve Yetim Fonu çizgisinde değerlendirilir.</p>
+                    <h2 class="text-4xl font-serif italic text-white mb-2" data-i18n="shop_title">İyilik mağazası</h2>
+                    <p class="text-slate-400 font-light text-sm" data-i18n="shop_sub">Gelir duyurulan iyilik amaçlarına aktarılır.</p>
                 </div>
                 <div class="flex gap-4 text-[10px] uppercase tracking-[0.2em]">
-                    <a href="#siparislerim" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-slate-300 hover:text-white">Siparişlerim</a>
-                    <a href="#nasil-siparis" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-slate-300 hover:text-white">Süreç</a>
+                    <a href="#siparislerim" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-slate-300 hover:text-white" data-i18n="shop_link_orders">Kayıtlarım</a>
+                    <a href="#nasil-siparis" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-slate-300 hover:text-white" data-i18n="shop_link_how">Süreç</a>
                 </div>
+            </div>
+
+            <div class="support-help-row" data-support-anchor>
+                <span class="support-help-text" data-i18n="support_prompt">Sipariş ayırtma işlemiyle ilgili bir sorun mu yaşıyorsunuz?</span>
+                <button type="button" class="support-help-trigger" data-support-trigger aria-expanded="false" aria-haspopup="dialog" data-i18n-title="support_trigger_aria" title="İletişim ve destek">
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </button>
             </div>
 
             <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -206,17 +235,17 @@
         <!-- #siparislerim -->
         <div id="route-siparislerim" class="route-page hidden space-y-12">
             <header class="text-center md:text-left">
-                <p class="text-[10px] uppercase tracking-[0.4em] text-blue-400 font-bold mb-3">Yerel özet</p>
-                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4">Siparişlerim</h2>
-                <p class="text-slate-400 font-light max-w-2xl">Bu sayfa yalnızca bu tarayıcıda tutulan ayırma kayıtlarını gösterir (adın ve sınıfın burada görünür). Katkı payı için proje ekibiyle sınıfta görüş.</p>
+                <p class="text-[10px] uppercase tracking-[0.4em] text-emerald-700 dark:text-blue-400 font-bold mb-3" data-i18n="orders_kicker">Yerel özet</p>
+                <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4" data-i18n="orders_title">Kayıtlarım</h2>
+                <p class="text-slate-400 font-light max-w-2xl" data-i18n="orders_intro">Bu sayfada yalnızca bu tarayıcıda tutulan ayırmaların görünür; adın ve sınıfın listelenir. Katkı payı için proje ekibiyle sınıfta görüş.</p>
             </header>
             <div id="orders-summary" class="glass-panel rounded-[2rem] border border-white/5 p-6 flex flex-wrap gap-8 text-sm text-slate-300">
-                <div><span class="text-slate-500 uppercase tracking-[0.2em] text-[10px] block mb-1">Kayıtlı sipariş</span><strong class="text-white text-2xl font-light" id="orders-count">0</strong></div>
+                <div><span class="text-slate-500 uppercase tracking-[0.2em] text-[10px] block mb-1" data-i18n="orders_count_lbl">Kayıtlı ayırma</span><strong class="text-white text-2xl font-light" id="orders-count">0</strong></div>
             </div>
             <div id="orders-empty" class="glass-panel rounded-[2.5rem] p-14 border border-white/5 text-center text-slate-400 hidden">
                 <i data-lucide="package-open" class="w-12 h-12 mx-auto text-slate-500 mb-4"></i>
-                <p class="font-light">Bu cihazda henüz kayıt yok. Mağazadan bir oyuncak ayırınca adın ve sınıfın burada listelenir.</p>
-                <a href="#magaza" class="inline-flex mt-6 items-center gap-2 text-blue-400 hover:text-blue-300 text-sm uppercase tracking-[0.2em]">Mağazaya git</a>
+                <p class="font-light" data-i18n="orders_empty">Henüz kayıt yok. Mağazadan ayırınca adın ve sınıfın burada görünür.</p>
+                <a href="#magaza" class="inline-flex mt-6 items-center gap-2 text-emerald-700 dark:text-blue-400 hover:opacity-90 text-sm uppercase tracking-[0.2em]" data-i18n="orders_empty_link">Mağazaya git</a>
             </div>
             <div id="orders-list" class="space-y-4"></div>
         </div>
@@ -227,7 +256,7 @@
             <span class="w-8 h-8 shrink-0 flex items-center justify-center">
                 <img src="pictures/ap_iyilikkoprusu_logo.png" alt="" class="w-7 h-7 object-contain" width="28" height="28" decoding="async">
             </span>
-            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 text-xs font-bold uppercase tracking-wider text-slate-300">Kayıtlı siparişler</span>
+            <span class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 text-xs font-bold uppercase tracking-wider text-slate-300" data-i18n="fab_label">Kayıtlarım</span>
         </a>
     </div>
 
@@ -241,7 +270,7 @@
                 <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <img src="pictures/ap_iyilikkoprusu_logo.png" alt="" class="w-14 h-14 object-contain" width="56" height="56" decoding="async">
                 </div>
-                <h3 class="text-2xl font-serif italic text-white">Kermeste ayır</h3>
+                <h3 class="text-2xl font-serif italic text-white" data-i18n="modal_title">Kermeste ayır</h3>
                 <p id="modal-product-caption" class="text-slate-400 text-xs mt-2 font-light"></p>
             </div>
 
@@ -250,16 +279,16 @@
                 <input type="hidden" id="selected-product-name" name="selected-product-name">
                 <input type="hidden" id="selected-product-price" name="selected-product-price">
                 <div>
-                    <label for="student-name" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4">Ad Soyad</label>
-                    <input type="text" id="student-name" autocomplete="name" required class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" placeholder="Örn: Ahmet Yılmaz">
+                    <label for="student-name" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4" data-i18n="modal_name_lbl">Ad soyad</label>
+                    <input type="text" id="student-name" autocomplete="name" required class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-emerald-500/50 dark:focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" data-i18n-placeholder="modal_name_ph" placeholder="Örn: Ahmet Yılmaz">
                 </div>
                 <div>
-                    <label for="student-sinif" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4">Sınıf / şube</label>
-                    <input type="text" id="student-sinif" name="student-sinif" required maxlength="12" autocomplete="off" inputmode="text" class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" placeholder="Örn: 8/A veya 10-C" aria-describedby="student-sinif-hint">
-                    <p id="student-sinif-hint" class="text-[10px] text-slate-600 mt-2 ml-4 font-light">Sınıf numarası, / veya -, şube (Türkçe harf desteklenir).</p>
+                    <label for="student-sinif" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4" data-i18n="modal_sinif_lbl">Sınıf / şube</label>
+                    <select id="student-sinif" name="student-sinif" required class="form-select-glass w-full bg-white/5 border border-white/10 rounded-[1.75rem] px-6 py-4 text-sm text-white outline-none focus:border-emerald-500/50 dark:focus:border-blue-500/50 focus:bg-white/10 transition-all cursor-pointer"></select>
+                    <p id="student-sinif-hint" class="text-[10px] text-slate-600 mt-2 ml-4 font-light" data-i18n="modal_sinif_hint">5–8. sınıf ve şuben listeden seçilir.</p>
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 rounded-full mt-2 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex justify-center items-center gap-2">
-                    <span>Ayır ve onayla</span>
+                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-blue-600 dark:to-purple-600 text-white font-bold py-4 rounded-full mt-2 hover:shadow-[0_0_30px_rgba(5,150,105,0.35)] dark:hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex justify-center items-center gap-2">
+                    <span data-i18n="modal_submit">Ayır ve onayla</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
@@ -281,9 +310,11 @@
                 <summary class="cursor-pointer text-[10px] uppercase tracking-[0.2em] text-slate-600 hover:text-slate-500">Teknik ayrıntı</summary>
                 <pre id="error-modal-technical" class="mt-3 text-[11px] text-slate-500 font-mono whitespace-pre-wrap break-words bg-black/30 rounded-xl p-4 border border-white/5 overflow-x-auto max-h-32 overflow-y-auto"></pre>
             </details>
-            <button type="button" id="error-modal-close" class="w-full bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold py-3 rounded-full transition-all text-sm uppercase tracking-[0.15em]">Tamam</button>
+            <button type="button" id="error-modal-close" class="w-full bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold py-3 rounded-full transition-all text-sm uppercase tracking-[0.15em]" data-i18n="err_close">Tamam</button>
         </div>
     </div>
+
+    <div id="support-popover" class="support-popover" role="dialog" aria-modal="false" aria-hidden="true"></div>
 
     <script src="app.js"></script>
     <script>lucide.createIcons();</script>
