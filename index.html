@@ -44,7 +44,7 @@
         <p class="mt-6 text-sm tracking-[0.3em] uppercase text-blue-300/70 font-light">Veriler Çekiliyor...</p>
     </div>
 
-    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[1002] px-6 py-3 rounded-full glass-panel border border-white/10 text-sm text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90vw] text-center" role="status" aria-live="polite"></div>
+    <div id="toast" class="toast-base fixed top-24 left-1/2 -translate-x-1/2 z-[1002] px-6 py-3 rounded-full glass-panel border border-white/10 text-sm text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 max-w-[90vw] text-center md:max-w-md" role="status" aria-live="polite" data-variant="info"></div>
 
     <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
@@ -159,21 +159,21 @@
                     <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">1</span>
                     <div>
                         <h3 class="text-white font-semibold mb-2">Mağazadan ürün seç</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed"><a href="#magaza" class="text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline">Mağaza</a> bölümünde bağışlık niteliğindeki ürünleri incele; fotoğraf ve bağış katkısı (liste fiyatı) ürün kartında görünür.</p>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed"><a href="#magaza" class="text-blue-400 hover:text-blue-300 underline-offset-4 hover:underline">Mağaza</a> bölümünde kermeste satılan oyuncakları incele; fotoğraf ve katkı payı ürün kartında görünür.</p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
                     <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">2</span>
                     <div>
-                        <h3 class="text-white font-semibold mb-2">Ayırt: bilgilerini gir</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed">“Ayırt” ile küçük bir form açılır; adını soyadını ve sınıf / şubeni yaz. Gönderildiğinde kayıt Appwrite veritabanına düşer; ürün “Satıldı” olarak işaretlenerek bir başka arkadaşa gösterilmez.</p>
+                        <h3 class="text-white font-semibold mb-2">Ayır: bilgilerini gir</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">“Ayır” ile açılan formda <strong class="text-slate-300 font-normal">adını soyadını</strong> ve okul formatında <strong class="text-slate-300 font-normal">sınıf / şube bilgini</strong> (örn. 8/A, 10-C) yaz. Kayıt Appwrite’a düşer; ürün başkasına gösterilmesin diye satıldı işaretlenir.</p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
                     <span class="shrink-0 w-12 h-12 rounded-full bg-blue-600/25 border border-blue-400/40 flex items-center justify-center text-white font-bold">3</span>
                     <div>
                         <h3 class="text-white font-semibold mb-2">Okul içi teslim ve ödeme</h3>
-                        <p class="text-slate-400 text-sm font-light leading-relaxed">Ayırdığın ürünün ücretini, proje ekibinin duyurduğu zaman diliminde ve güvenli noktada teslim et. Güvenliğini ve sıranı her zaman görevli öğretmen / görevli öğrenci ile teyit et.</p>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">Ayırdığın oyuncağın katkı payını, proje ekibinin duyurduğu zaman diliminde ve okulda belirlenen güvenli noktada teslim et. Her zaman görevli öğretmen veya görevli öğrenci ile teyit et.</p>
                     </div>
                 </li>
                 <li class="glass-panel rounded-[2rem] p-8 border border-white/5 flex gap-6">
@@ -208,14 +208,14 @@
             <header class="text-center md:text-left">
                 <p class="text-[10px] uppercase tracking-[0.4em] text-blue-400 font-bold mb-3">Yerel özet</p>
                 <h2 class="text-4xl md:text-5xl font-serif italic text-white mb-4">Siparişlerim</h2>
-                <p class="text-slate-400 font-light max-w-2xl">Bu sayfa yalnızca bu tarayıcıda saklanan sipariş kayıtlarını gösterir. Ödeme durumu için proje görevli ekibiyle yüz yüze iletişim kurmayı unutma.</p>
+                <p class="text-slate-400 font-light max-w-2xl">Bu sayfa yalnızca bu tarayıcıda tutulan ayırma kayıtlarını gösterir (adın ve sınıfın burada görünür). Katkı payı için proje ekibiyle sınıfta görüş.</p>
             </header>
             <div id="orders-summary" class="glass-panel rounded-[2rem] border border-white/5 p-6 flex flex-wrap gap-8 text-sm text-slate-300">
                 <div><span class="text-slate-500 uppercase tracking-[0.2em] text-[10px] block mb-1">Kayıtlı sipariş</span><strong class="text-white text-2xl font-light" id="orders-count">0</strong></div>
             </div>
             <div id="orders-empty" class="glass-panel rounded-[2.5rem] p-14 border border-white/5 text-center text-slate-400 hidden">
                 <i data-lucide="package-open" class="w-12 h-12 mx-auto text-slate-500 mb-4"></i>
-                <p class="font-light">Bu cihazda henüz kayıtlı sipariş yok. Mağazadan bir ürün ayırınca burada görünecek.</p>
+                <p class="font-light">Bu cihazda henüz kayıt yok. Mağazadan bir oyuncak ayırınca adın ve sınıfın burada listelenir.</p>
                 <a href="#magaza" class="inline-flex mt-6 items-center gap-2 text-blue-400 hover:text-blue-300 text-sm uppercase tracking-[0.2em]">Mağazaya git</a>
             </div>
             <div id="orders-list" class="space-y-4"></div>
@@ -241,7 +241,7 @@
                 <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <img src="pictures/ap_iyilikkoprusu_logo.png" alt="" class="w-14 h-14 object-contain" width="56" height="56" decoding="async">
                 </div>
-                <h3 class="text-2xl font-serif italic text-white">İyiliğe ortak ol</h3>
+                <h3 class="text-2xl font-serif italic text-white">Kermeste ayır</h3>
                 <p id="modal-product-caption" class="text-slate-400 text-xs mt-2 font-light"></p>
             </div>
 
@@ -254,14 +254,34 @@
                     <input type="text" id="student-name" autocomplete="name" required class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" placeholder="Örn: Ahmet Yılmaz">
                 </div>
                 <div>
-                    <label for="student-class" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4">Sınıf / Şube</label>
-                    <input type="text" id="student-class" required class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" placeholder="Örn: 7/B">
+                    <label for="student-sinif" class="block text-[10px] uppercase tracking-widest text-slate-400 mb-2 ml-4">Sınıf / şube</label>
+                    <input type="text" id="student-sinif" name="student-sinif" required maxlength="12" autocomplete="off" inputmode="text" class="w-full bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all placeholder:text-slate-600" placeholder="Örn: 8/A veya 10-C" aria-describedby="student-sinif-hint">
+                    <p id="student-sinif-hint" class="text-[10px] text-slate-600 mt-2 ml-4 font-light">Sınıf numarası, / veya -, şube (Türkçe harf desteklenir).</p>
                 </div>
                 <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 rounded-full mt-2 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex justify-center items-center gap-2">
-                    <span>Ayırt ve bağışla</span>
+                    <span>Ayır ve onayla</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <div id="error-modal" class="fixed inset-0 z-[1003] glass-heavy flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" aria-hidden="true">
+        <div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 border border-red-400/25 shadow-[0_0_40px_rgba(239,68,68,0.12)] transform scale-[0.96] transition-transform duration-300" id="error-modal-content">
+            <div class="flex items-start gap-4 mb-6">
+                <span class="shrink-0 w-11 h-11 rounded-full bg-red-500/15 border border-red-400/35 flex items-center justify-center">
+                    <i data-lucide="alert-circle" class="w-6 h-6 text-red-300"></i>
+                </span>
+                <div class="min-w-0">
+                    <h3 id="error-modal-title" class="text-lg font-semibold text-white leading-snug"></h3>
+                    <p id="error-modal-body" class="text-slate-400 text-sm mt-3 font-light leading-relaxed"></p>
+                </div>
+            </div>
+            <details class="group mb-6">
+                <summary class="cursor-pointer text-[10px] uppercase tracking-[0.2em] text-slate-600 hover:text-slate-500">Teknik ayrıntı</summary>
+                <pre id="error-modal-technical" class="mt-3 text-[11px] text-slate-500 font-mono whitespace-pre-wrap break-words bg-black/30 rounded-xl p-4 border border-white/5 overflow-x-auto max-h-32 overflow-y-auto"></pre>
+            </details>
+            <button type="button" id="error-modal-close" class="w-full bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold py-3 rounded-full transition-all text-sm uppercase tracking-[0.15em]">Tamam</button>
         </div>
     </div>
 
