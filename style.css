@@ -70,3 +70,31 @@ body {
 #order-modal.active #modal-content {
     transform: scale(1);
 }
+
+.nav-link.nav-active,
+.nav-link-mobile.nav-active,
+.nav-brand.nav-active {
+    color: rgb(96 165 250);
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.route-page {
+    animation: routeFade 0.45s ease both;
+}
+
+@keyframes routeFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
