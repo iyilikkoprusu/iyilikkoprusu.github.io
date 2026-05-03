@@ -12,6 +12,9 @@ const SIPARISLER_COLLECTION = 'sipariler';
 
 const LS_ORDERS_KEY = 'iyilikkoprusu_orders_v1';
 
+/** Okul sınıfı: sınıf numarası (1–12) + / veya - + şube (örn. 8/A, 10-C) */
+const OKUL_SINIF_REGEX = /^([1-9]|1[0-2])[/\-]([A-Za-zÇçĞğİıÖöŞşÜü0-9]{1,4})$/u;
+
 const ROUTES = ['anasayfa', 'vakif', 'nasil-siparis', 'magaza', 'siparislerim'];
 
 const ROUTE_LEGACY = {
@@ -33,15 +36,172 @@ const submitBtn = document.getElementById('submit-btn');
 const toastEl = document.getElementById('toast');
 const mobileToggle = document.getElementById('mobile-menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
+const errorModal = document.getElementById('error-modal');
+const errorModalTitle = document.getElementById('error-modal-title');
+const errorModalBody = document.getElementById('error-modal-body');
+const errorModalTechnical = document.getElementById('error-modal-technical');
+const errorModalClose = document.getElementById('error-modal-close');
 
-function toast(msg) {
+/**
+ * Sınıf / şube metnini doğrular ve Appwrite + yerel liste için tek biçimde döndürür.
+ * @returns {{ ok: true, value: string } | { ok: false, message: string }}
+ */
+function validateNormalizeOkulSinif(raw) {
+    const trimmed = String(raw ?? '').trim();
+    if (!trimmed) {
+        return {
+            ok: false,
+            message: 'Sınıf / şube alanı boş bırakılamaz (örn. 8/A).',
+        };
+    }
+    const compact = trimmed.replace(/\s+/g, '');
+    const m = compact.match(OKUL_SINIF_REGEX);
+    if (!m) {
+        return {
+            ok: false,
+            message:
+                'Sınıfı okul formatında yaz: örn. 8/A, 9-B veya 10/C (sınıf numarası, ardından / veya -, şube).',
+        };
+    }
+    const grade = m[1];
+    const branch = m[2].toLocaleUpperCase('tr-TR');
+    const value = `${grade}/${branch}`;
+    return { ok: true, value };
+}
+
+function isLikelySinifSchemaRejection(raw, lower) {
+    if (!lower) return false;
+    const mentionsSinif =
+        lower.includes('sinif') ||
+        lower.includes('"sinif"') ||
+        lower.includes("'sinif'");
+    if (!mentionsSinif) return false;
+    const docStruct =
+        lower.includes('invalid document structure') ||
+        lower.includes('invalid format') ||
+        lower.includes('has invalid format');
+    const enumOrChoice =
+        lower.includes('enum') ||
+        /\b(standard|express|premium)\b/i.test(raw);
+    return docStruct || enumOrChoice;
+}
+
+function toast(msg, variant = 'info') {
     if (!toastEl) return;
     toastEl.textContent = msg;
+    toastEl.setAttribute('data-variant', variant === 'error' ? 'error' : 'info');
     toastEl.style.opacity = '1';
     clearTimeout(toast._t);
+    const dur = variant === 'error' ? 6500 : 3400;
     toast._t = setTimeout(() => {
         toastEl.style.opacity = '0';
-    }, 3400);
+    }, dur);
+}
+
+function extractAppwriteMessage(err) {
+    if (!err) return '';
+    let m = typeof err.message === 'string' ? err.message : '';
+    try {
+        if (typeof err.response === 'string' && err.response) {
+            const j = JSON.parse(err.response);
+            m = j.message || j.errors?.[0]?.message || m;
+        } else if (err.response && typeof err.response === 'object') {
+            m = err.response.message || err.errors?.[0]?.message || m;
+        }
+    } catch (_) {
+        /* yok say */
+    }
+    return m || String(err);
+}
+
+function humanizeAppwriteError(err) {
+    const raw = extractAppwriteMessage(err);
+    const lower = raw.toLowerCase();
+
+    if (isLikelySinifSchemaRejection(raw, lower)) {
+        return {
+            title: 'Veritabanı: sinif alanı güncellenmeli',
+            body:
+                'Sunucu sınıf bilgisini (örn. 8/A) kabul etmedi; büyük olasılıkla Appwrite’da `sinif` hâlâ eski enum (standard / express / premium) ile kısıtlı. Lütfen veritabanı panelinden `sinif` attribute kısıtlamasını güncelleyin: koleksiyonda bu alanı metin (string) ve okul sınıfına uygun serbest girişe izin verecek şekilde düzenleyin. Ardından formu yeniden deneyin.',
+            technical: raw,
+            kind: 'schema-sinif',
+        };
+    }
+
+    if (
+        lower.includes('invalid document structure') ||
+        lower.includes('has invalid format') ||
+        lower.includes('invalid format')
+    ) {
+        return {
+            title: 'Kayıt doğrulanamadı',
+            body:
+                'Sunucu gönderilen bilgilerden birini beklenen biçimde bulamadı. Formdaki alanları kontrol et; devam ederse proje öğretmenine veya Appwrite şemasından sorumlu arkadaşına haber ver.',
+            technical: raw,
+            kind: 'validation',
+        };
+    }
+
+    if (
+        lower.includes('unauthorized') ||
+        lower.includes('not authorized') ||
+        lower.includes(' 401 ')
+    ) {
+        return {
+            title: 'Yetki uyarısı',
+            body: 'Bu işlem için gereken izinler eksik görünüyor. Projede anonim oturum veya koleksiyon izinleri Appwrite konsolundan kontrol edilmeli.',
+            technical: raw,
+            kind: 'auth',
+        };
+    }
+
+    if (
+        lower.includes('network') ||
+        lower.includes('failed to fetch')
+    ) {
+        return {
+            title: 'Bağlantı sorunu',
+            body: 'Ağ üzerinden Appwrite’a ulaşılamadı. Bağlantını kontrol et ve yeniden dene.',
+            technical: raw,
+            kind: 'network',
+        };
+    }
+
+    return {
+        title: 'İşlem tamamlanamadı',
+        body:
+            raw.length && raw.length < 220
+                ? raw
+                : 'Sunucudan beklenmeyen bir yanıt geldi. Konsolu açıp teknik mesajı inceleyebilir veya bir süre sonra tekrar deneyebilirsin.',
+        technical: raw,
+        kind: 'generic',
+    };
+}
+
+window.closeErrorModal = () => {
+    if (!errorModal) return;
+    errorModal.classList.remove('active');
+    errorModal.setAttribute('aria-hidden', 'true');
+};
+
+function openErrorModal(summary) {
+    if (!errorModal || !errorModalTitle || !errorModalBody) return;
+    errorModalTitle.textContent = summary.title;
+    errorModalBody.textContent = summary.body;
+    if (errorModalTechnical) {
+        errorModalTechnical.textContent = summary.technical || '';
+    }
+    errorModal.classList.add('active');
+    errorModal.setAttribute('aria-hidden', 'false');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+/** Yerel sipariş satırında gösterilecek sınıf metni (yeni + eski kayıtlar) */
+function siparisLocalSinifGoster(o) {
+    if (o.sinif && String(o.sinif).trim()) return String(o.sinif).trim();
+    if (o.sinifEtiket) return String(o.sinifEtiket);
+    if (o.sinifKey) return String(o.sinifKey);
+    return '';
 }
 
 function getRouteSlugFromLocation() {
@@ -175,16 +335,18 @@ function renderOrdersList() {
         const row = document.createElement('article');
         row.className =
             'glass-panel rounded-[2rem] border border-white/5 p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4';
+        const sinifMetni = siparisLocalSinifGoster(o);
+
         row.innerHTML = `
             <div class="space-y-1 min-w-0">
-                <h3 class="text-white font-semibold truncate">${escapeHtml(o.urunAdi || 'Ürün')}</h3>
+                <h3 class="text-white font-semibold truncate">${escapeHtml(o.urunAdi || 'Oyuncak')}</h3>
                 <p class="text-slate-400 text-sm font-light">
-                    ${escapeHtml(o.aliciAdSoyad || '')}${o.sinif ? ' · ' + escapeHtml(o.sinif) : ''}
+                    <span class="text-slate-300">${escapeHtml(o.aliciAdSoyad || '')}</span>${sinifMetni ? `${o.aliciAdSoyad ? ' · ' : ''}<span class="text-blue-300/90">Sınıf ${escapeHtml(sinifMetni)}</span>` : ''}
                 </p>
                 ${o.ref ? `<p class="text-[10px] uppercase tracking-[0.2em] text-slate-600">Kayıt: ${escapeHtml(o.ref)}</p>` : ''}
             </div>
             <div class="shrink-0 flex flex-col items-start md:items-end gap-1 text-sm">
-                <span class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Bağış tutarı</span>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-slate-500">Kermes katkı payı</span>
                 <span class="text-white font-light text-lg">${escapeHtml(katki)}</span>
                 <span class="text-slate-500 text-xs">${escapeHtml(formatTrDate(o.tarihISO || ''))}</span>
             </div>`;
@@ -212,8 +374,8 @@ window.openModal = (productId) => {
     if (caption) {
         const priceTxt =
             typeof price === 'number' && !Number.isNaN(price)
-                ? `Bağış katkısı: ₺${price}`
-                : 'Bağış katkısı ürün karında belirtilir.';
+                ? `Kermes katkı payı: ₺${price}`
+                : 'Katkı payı ürün kartında yazar.';
         caption.textContent = `${name} — ${priceTxt}`;
     }
 
@@ -252,7 +414,8 @@ async function fetchProducts() {
             productsGrid.innerHTML =
                 '<p class="col-span-full text-center py-12 text-red-300/90 text-sm">Ürün listesi şu anda yüklenemedi. Ağ bağlantını ve Appwrite izin ayarlarını kontrol et.</p>';
         }
-        toast('Ürünler yüklenemedi.');
+        const h = humanizeAppwriteError(error);
+        toast(`Ürünler yüklenemedi — ${h.body.slice(0, 120)}${h.body.length > 120 ? '…' : ''}`, 'error');
     } finally {
         hideSmartLoaderSoon();
     }
@@ -292,7 +455,7 @@ function renderProducts(products) {
             <button type="button"
                 class="reserve-btn w-full bg-white/5 hover:bg-blue-600 text-white py-3 rounded-xl text-xs font-bold uppercase transition-all duration-300"
                 data-product-id="${escapeHtml(p.$id)}">
-                Ayırt
+                Ayır
             </button>
         </article>`;
         })
@@ -332,11 +495,17 @@ if (orderForm) {
             document.getElementById('selected-product-price')?.value ?? '';
         const studentName =
             document.getElementById('student-name')?.value?.trim() || '';
-        const studentClass =
-            document.getElementById('student-class')?.value?.trim() || '';
+        const sinifRaw =
+            document.getElementById('student-sinif')?.value ?? '';
+        const sinifCheck = validateNormalizeOkulSinif(sinifRaw);
+        if (!sinifCheck.ok) {
+            toast(sinifCheck.message, 'error');
+            return;
+        }
+        const sinifValue = sinifCheck.value;
 
-        if (!productId || !studentName || !studentClass) {
-            toast('Tüm alanları doldur.');
+        if (!productId || !studentName) {
+            toast('Ad ve soyadını yazmalısın.', 'error');
             return;
         }
 
@@ -358,7 +527,7 @@ if (orderForm) {
                 {
                     urunAdi: productName,
                     aliciAdSoyad: studentName,
-                    sinif: studentClass,
+                    sinif: sinifValue,
                     tarih: iso,
                 },
             );
@@ -374,7 +543,7 @@ if (orderForm) {
                 urunRef: productId,
                 urunAdi: productName,
                 aliciAdSoyad: studentName,
-                sinif: studentClass,
+                sinif: sinifValue,
                 katki:
                     katkiParsed != null && !Number.isNaN(katkiParsed)
                         ? katkiParsed
@@ -387,24 +556,21 @@ if (orderForm) {
             document.getElementById(`product-${productId}`)?.remove();
 
             toast(
-                'Sipariş kaydedildi. Ödemeyi proje görevlilerinin duyurusuna göre tamamla.',
+                'Kaydın alındı. Katkı payını proje ekibinin duyurusuna göre sınıfta teslim etmeyi unutma.',
             );
             if (activeRouteSlug === 'siparislerim') {
                 renderOrdersList();
             }
         } catch (err) {
             console.error('Sipariş hatası:', err);
-            const msg =
-                err && typeof err.message === 'string'
-                    ? err.message
-                    : 'Bilinmeyen hata';
-            toast(`Sipariş tamamlanamadı: ${msg}`);
-            alert(`Hata: ${msg}`);
+            const summary = humanizeAppwriteError(err);
+            toast(summary.title + ' — ayrıntılar için pencereye bak.', 'error');
+            openErrorModal(summary);
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML =
-                    '<span>Ayırt ve bağışla</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                    '<span>Ayır ve onayla</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
                 lucide.createIcons();
             }
         }
@@ -425,6 +591,17 @@ document.addEventListener('DOMContentLoaded', () => {
             `${window.location.pathname}${window.location.search}#anasayfa`,
         );
     }
+
+    errorModalClose?.addEventListener('click', window.closeErrorModal);
+    errorModal?.addEventListener('click', (ev) => {
+        if (ev.target === errorModal) window.closeErrorModal();
+    });
+    document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && errorModal?.classList.contains('active')) {
+            window.closeErrorModal();
+        }
+    });
+
     onRouteChange();
     renderOrdersList();
     fetchProducts();
