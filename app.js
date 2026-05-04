@@ -8,7 +8,7 @@ const databases = new Databases(client);
 
 const DB_ID = '69efd5b5000e8d71c985';
 const URUNLER_COLLECTION = 'urunler';
-const SIPARISLER_COLLECTION = 'sipariler';
+const SIPARISLER_COLLECTION = 'siparisler';
 
 const LS_ORDERS_KEY = 'iyilikkoprusu_orders_v1';
 const LS_LANG_KEY = 'iyilikkoprusu_lang';
@@ -120,7 +120,7 @@ const I18N = {
         support_mail_body: 'Merhaba,\n\n',
         err_schema_sinif_title: 'Veritabanı: sinif alanı güncellenmeli',
         err_schema_sinif_body:
-            'Sunucu sınıf bilgisini kabul etmedi. Appwrite panelinde sipariler koleksiyonundaki sinif alanını metin (okul formatı) olacak şekilde güncelleyin ve yeniden deneyin.',
+            'Sunucu sınıf bilgisini kabul etmedi. Appwrite panelinde siparisler koleksiyonundaki sinif alanını metin (okul formatı) olacak şekilde güncelleyin ve yeniden deneyin.',
         err_validation_title: 'Kayıt doğrulanamadı',
         err_validation_body: 'Sunucu gönderilen bilgilerden birini beklenen biçimde bulamadı. Formu kontrol edin veya proje ekibine danışın.',
         err_auth_title: 'Yetki uyarısı',
