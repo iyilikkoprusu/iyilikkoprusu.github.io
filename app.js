@@ -1130,7 +1130,6 @@ function hideSmartLoaderSoon() {
 async function fetchProducts() {
     try {
         const response = await databases.listDocuments(DB_ID, URUNLER_COLLECTION, [
-            Query.notEqual('durum', 'Satıldı'),
             Query.orderDesc('$createdAt'),
         ]);
 
@@ -1153,37 +1152,43 @@ async function fetchProducts() {
     }
 }
 
+const CATALOG_IMG_FALLBACK =
+    'https://via.placeholder.com/600/e2e8f0/64748b?text=%C3%9Cr%C3%BCn';
+
 function renderProducts(products) {
     if (!productsGrid) return;
-    if (products.length === 0) {
-        productsGrid.innerHTML = `<p class="col-span-full text-center py-12 text-slate-500 font-light">${escapeHtml(t('catalog_empty'))}</p>`;
-        return;
-    }
+    try {
+        if (!Array.isArray(products) || products.length === 0) {
+            productsGrid.innerHTML = `<p class="col-span-full text-center py-12 text-slate-500 font-light">${escapeHtml(t('catalog_empty'))}</p>`;
+            return;
+        }
 
-    const reserve = escapeHtml(t('product_reserve'));
-    productsGrid.innerHTML = products
-        .map((p) => {
-            const urunIsmi =
-                p.baslik ||
-                p.urunAdi ||
-                p.isim ||
-                p.baslik ||
-                '—';
-            const safeName = escapeHtml(urunIsmi);
-            const urunGorsel =
-                p.resimUrl || p.gorsel || p.resimUrl || 'https://via.placeholder.com/600';
-            const urunFiyat = p.fiyat != null ? p.fiyat : 0;
+        const reserve = escapeHtml(t('product_reserve'));
+        const imgOnError = `this.onerror=null;this.src='${CATALOG_IMG_FALLBACK}';`;
 
-            return `
+        productsGrid.innerHTML = products
+            .map((p) => {
+                const urunIsmi =
+                    p.baslik ||
+                    p.urunAdi ||
+                    p.isim ||
+                    '—';
+                const safeName = escapeHtml(urunIsmi);
+                const urunGorsel =
+                    p.resimUrl || p.gorsel || CATALOG_IMG_FALLBACK;
+                const urunFiyat = p.fiyat != null ? p.fiyat : 0;
+                const aciklama = p.aciklama != null ? String(p.aciklama) : '';
+
+                return `
         <article id="product-${p.$id}" class="glass-panel p-5 rounded-[2rem] border border-white/5 group hover:-translate-y-2 transition-all duration-500">
             <div class="aspect-square bg-white/5 rounded-[1.5rem] mb-6 overflow-hidden relative">
-                <img src="${escapeHtml(urunGorsel)}" alt="${safeName}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" loading="lazy" decoding="async">
+                <img src="${escapeHtml(urunGorsel)}" alt="${safeName}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" loading="lazy" decoding="async" onerror="${imgOnError}">
                 <div class="absolute top-4 right-4 bg-black/40 dark:bg-black/50 backdrop-blur-md px-3 py-1 rounded-full">
                     <span class="text-xs font-bold text-white">₺${escapeHtml(String(urunFiyat))}</span>
                 </div>
             </div>
             <h4 class="font-semibold text-white mb-1 px-2 truncate">${safeName}</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 px-2 mb-4 line-clamp-2 min-h-[2.5rem]">${escapeHtml(p.aciklama || '')}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 px-2 mb-4 line-clamp-2 min-h-[2.5rem]">${escapeHtml(aciklama)}</p>
             <div class="support-help-row px-2 mb-3 !mt-0 !gap-2">
                 <span class="support-help-text !text-[11px] leading-snug">${escapeHtml(t('support_prompt'))}</span>
                 <button type="button" class="support-help-trigger !w-8 !h-8" data-support-trigger aria-expanded="false" data-i18n-title="support_trigger_aria" title="${escapeHtml(t('support_trigger_aria'))}">
@@ -1196,13 +1201,17 @@ function renderProducts(products) {
                 ${reserve}
             </button>
         </article>`;
-        })
-        .join('');
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    document.querySelectorAll('#products-grid [data-support-anchor]').forEach((anchor) => {
-        bindSupportAnchor(anchor, canHover);
-    });
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+            })
+            .join('');
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        document.querySelectorAll('#products-grid [data-support-anchor]').forEach((anchor) => {
+            bindSupportAnchor(anchor, canHover);
+        });
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch (err) {
+        logErr('render_products', { count: products?.length }, err);
+        productsGrid.innerHTML = `<p class="col-span-full text-center py-12 text-red-600/90 dark:text-red-300/90 text-sm">${escapeHtml(t('catalog_load_fail'))}</p>`;
+    }
 }
 
 if (productsGrid) {
@@ -1274,10 +1283,6 @@ if (orderForm) {
                     tarih: iso,
                 },
             );
-
-            await databases.updateDocument(DB_ID, URUNLER_COLLECTION, productId, {
-                durum: 'Satıldı',
-            });
 
             delete productsById[productId];
             lastProductsRendered = lastProductsRendered.filter((d) => d.$id !== productId);
