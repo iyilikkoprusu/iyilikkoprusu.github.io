@@ -15,7 +15,7 @@ const LS_LANG_KEY = 'iyilikkoprusu_lang';
 const LS_THEME_KEY = 'iyilikkoprusu_theme';
 
 /** E.164 rakamları (başında + yok) — okul ekibi kendi hattını yazsın */
-const SUPPORT_PHONE_DIGITS = '905551234567';
+const SUPPORT_PHONE_DIGITS = '905314965408';
 const SUPPORT_EMAIL = 'destek@iyilikkoprusu.org';
 
 const LANGS = /** @type {const} */ (['tr', 'en', 'ar', 'fr', 'es']);
