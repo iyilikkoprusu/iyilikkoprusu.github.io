@@ -182,9 +182,20 @@ html[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
     color: var(--nav-active) !important;
 }
 
-.nav-brand span {
-    font-size: clamp(1.5rem, 5vw, 3rem);
+.nav-brand,
+.nav-link,
+.nav-link-mobile {
     white-space: normal;
+}
+
+.nav-brand span {
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    line-height: 1.1;
+}
+
+#route-anasayfa h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    max-width: 48rem;
 }
 
 .line-clamp-2 {
