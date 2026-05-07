@@ -42,6 +42,8 @@ const productsById = {};
 
 let activeRouteSlug = '';
 
+let currentDetailProductId = '';
+
 const I18N = {
     tr: {
         lang_label: 'Dil',
@@ -498,6 +500,7 @@ const I18N = {
 const smartLoader = document.getElementById('smart-loader');
 const productsGrid = document.getElementById('products-grid');
 const orderModal = document.getElementById('order-modal');
+const productDetailModal = document.getElementById('product-detail-modal');
 const orderForm = document.getElementById('order-form');
 const submitBtn = document.getElementById('submit-btn');
 const toastEl = document.getElementById('toast');
@@ -1084,29 +1087,56 @@ function renderOrdersList() {
     });
 }
 
+window.openDetailModal = (productId) => {
+    const p = productsById[productId];
+    const detailImage = document.getElementById('detail-image');
+    const detailTitle = document.getElementById('detail-title');
+    const detailDescription = document.getElementById('detail-description');
+
+    const name = p
+        ? p.baslik || p.urunAdi || p.isim || '—'
+        : '—';
+    const image = p
+        ? p.resimUrl || p.gorsel || CATALOG_IMG_FALLBACK
+        : CATALOG_IMG_FALLBACK;
+    const description = p && p.aciklama != null ? String(p.aciklama) : '';
+
+    if (detailImage) detailImage.src = image;
+    if (detailTitle) detailTitle.textContent = name;
+    if (detailDescription) detailDescription.textContent = description;
+
+    currentDetailProductId = productId;
+
+    if (productDetailModal) productDetailModal.classList.add('active');
+};
+
+window.closeDetailModal = () => {
+    if (productDetailModal) productDetailModal.classList.remove('active');
+    currentDetailProductId = '';
+};
+
+window.openOrderModalFromDetail = () => {
+    if (currentDetailProductId) {
+        closeDetailModal();
+        window.openModal(currentDetailProductId);
+    }
+};
+
 window.openModal = (productId) => {
     const p = productsById[productId];
     const productIdInput = document.getElementById('selected-product-id');
     const productNameInput = document.getElementById('selected-product-name');
-    const productPriceInput = document.getElementById('selected-product-price');
     const caption = document.getElementById('modal-product-caption');
 
     const name = p
         ? p.baslik || p.urunAdi || p.isim || '—'
         : '—';
-    const price = p && p.fiyat != null ? Number(p.fiyat) : '';
 
     if (productIdInput) productIdInput.value = productId;
     if (productNameInput) productNameInput.value = name;
-    if (productPriceInput) productPriceInput.value =
-        typeof price === 'number' && !Number.isNaN(price) ? String(price) : '';
 
     if (caption) {
-        const priceTxt =
-            typeof price === 'number' && !Number.isNaN(price)
-                ? `${t('orders_fee_lbl')}: ₺${price}`
-                : t('modal_price_unknown');
-        caption.textContent = `${name} — ${priceTxt}`;
+        caption.textContent = name;
     }
 
     if (orderModal) orderModal.classList.add('active');
@@ -1117,6 +1147,14 @@ window.closeModal = () => {
     if (orderForm) orderForm.reset();
     populateStudentSinifSelect();
 };
+
+if (productDetailModal) {
+    productDetailModal.addEventListener('click', (e) => {
+        if (e.target === productDetailModal) {
+            closeDetailModal();
+        }
+    });
+}
 
 function hideSmartLoaderSoon() {
     if (!smartLoader) return;
@@ -1176,16 +1214,12 @@ function renderProducts(products) {
                 const safeName = escapeHtml(urunIsmi);
                 const urunGorsel =
                     p.resimUrl || p.gorsel || CATALOG_IMG_FALLBACK;
-                const urunFiyat = p.fiyat != null ? p.fiyat : 0;
                 const aciklama = p.aciklama != null ? String(p.aciklama) : '';
 
                 return `
         <article id="product-${p.$id}" class="glass-panel p-5 rounded-[2rem] border border-white/5 group hover:-translate-y-2 transition-all duration-500">
             <div class="aspect-square bg-white/5 rounded-[1.5rem] mb-6 overflow-hidden relative">
                 <img src="${escapeHtml(urunGorsel)}" alt="${safeName}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700" loading="lazy" decoding="async" onerror="${imgOnError}">
-                <div class="absolute top-4 right-4 bg-black/40 dark:bg-black/50 backdrop-blur-md px-3 py-1 rounded-full">
-                    <span class="text-xs font-bold text-white">₺${escapeHtml(String(urunFiyat))}</span>
-                </div>
             </div>
             <h4 class="font-semibold text-white mb-1 px-2 truncate">${safeName}</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 px-2 mb-4 line-clamp-2 min-h-[2.5rem]">${escapeHtml(aciklama)}</p>
@@ -1216,11 +1250,11 @@ function renderProducts(products) {
 
 if (productsGrid) {
     productsGrid.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-product-id]');
-        if (!btn || !productsGrid.contains(btn)) return;
-        const id = btn.getAttribute('data-product-id');
+        const article = e.target.closest('[id^="product-"]');
+        if (!article || !productsGrid.contains(article)) return;
+        const id = article.id.replace('product-', '');
         if (!id || !productsById[id]) return;
-        window.openModal(id);
+        window.openDetailModal(id);
     });
 }
 
@@ -1245,8 +1279,6 @@ if (orderForm) {
             document.getElementById('selected-product-id')?.value ?? '';
         const productName =
             document.getElementById('selected-product-name')?.value || '—';
-        const priceRaw =
-            document.getElementById('selected-product-price')?.value ?? '';
         const studentName =
             document.getElementById('student-name')?.value?.trim() || '';
         const sinifRaw = document.getElementById('student-sinif')?.value ?? '';
@@ -1270,8 +1302,6 @@ if (orderForm) {
         const iso = new Date().toISOString();
 
         try {
-            const katkiParsed = priceRaw !== '' ? Number(priceRaw) : null;
-
             const created = await databases.createDocument(
                 DB_ID,
                 SIPARISLER_COLLECTION,
