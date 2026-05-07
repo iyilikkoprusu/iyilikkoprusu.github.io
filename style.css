@@ -168,10 +168,23 @@ html[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
     transform: scale(1);
 }
 
+#product-detail-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+#product-detail-modal.active > div {
+    transform: scale(1);
+}
+
 .nav-link.nav-active,
 .nav-link-mobile.nav-active,
 .nav-brand.nav-active {
     color: var(--nav-active) !important;
+}
+
+.nav-brand span {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    white-space: normal;
 }
 
 .line-clamp-2 {
