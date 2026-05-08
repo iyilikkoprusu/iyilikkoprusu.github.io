@@ -24,7 +24,7 @@ const SINIF_GRADES = [5, 6, 7, 8];
 const SINIF_BRANCHES = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 /** Yalnızca 5–8 / A–Z (formdan) */
-const OKUL_SINIF_REGEX = /^([5-8])\/([A-Z])$/;
+const OKUL_SINIF_REGEX = /^([5-8])\/([A-E])$/;
 
 const ROUTES = ['anasayfa', 'vakif', 'nasil-siparis', 'magaza', 'siparislerim'];
 
